@@ -3,6 +3,8 @@ grammar Musileng;
 @header {
 	import java.util.HashMap;
 	import java.util.Map;
+	import java.util.List;
+	import java.util.ArrayList;
 }
 
 @members {
@@ -29,10 +31,10 @@ grammar Musileng;
 		}
 	}
 	
-	static class Compas {
+	static class IndicacionCompas {
 		public int tiempos;
 		public int tipoNota;
-		public Compas(int tiempos, int tipoNota) {
+		public IndicacionCompas(int tiempos, int tipoNota) {
 			this.tiempos = tiempos;
 			this.tipoNota = tipoNota;
 		}
@@ -46,12 +48,20 @@ grammar Musileng;
 		public String duracion;
 		public String altura;
 		public Character alteracion;
-		public int octava;
-		public Nota(String altura, int octava, String duracion, Character alteracion) {
+		public Integer octava;
+		boolean tienePuntillo;
+		public Nota(String altura, Integer octava, String duracion, Character alteracion, boolean tienePuntillo) {
 			this.altura = altura;
 			this.octava = octava;
 			this.duracion = duracion;
 			this.alteracion = alteracion;
+		}
+	}
+	
+	static class Compas {
+		public List<Nota> notas;
+		public Compas() {
+			this.notas = new ArrayList<Nota>();
 		}
 	}
 }
@@ -59,29 +69,34 @@ grammar Musileng;
 
 
 //Gramatica 
-s : tempos elcompas constantes melodia[$elcompas.compasObj];
+s : tempos elcompas constantes melodia[$elcompas.indicacion];
 
 tempos: '#tempo' DURACION NUM ;
 
-elcompas returns [Compas compasObj] : '#compas' n1 = NUM'/' n2 = NUM {$elcompas::compasObj = new Compas($n1.int,$n2.int);};
+elcompas returns [IndicacionCompas indicacion] : '#compas' n1 = NUM'/' n2 = NUM {$elcompas::indicacion = new IndicacionCompas($n1.int,$n2.int);};
 
 constantes: constante*;
 
 constante: 'const' n1 = NOMBRE'='(NUM {agregarConstante($n1.text, $NUM.int);}|n2 = NOMBRE{agregarConstante($n1.text, $n2.text, $n1.line);})';';
 
-melodia[Compas compasObj] : ('voz''('(NUM |NOMBRE)')''{'(c1 = compas c2 = compas* r1 = repeticion* | r2 = repeticion c3 = compas* r3 = repeticion*)'}')+;
+melodia[IndicacionCompas indicacion] : ('voz''('(NUM |NOMBRE)')''{'compases[$melodia::indicacion]'}')+;
 
-repeticion: 'repetir''('NUM {validarRepeticiones($NUM.int);} ')''{'compas+'}';
+compases[IndicacionCompas indicacion]: compas[$compases::indicacion] c1 = compases[$compases::indicacion] | repeticion c2 = compases[$compases::indicacion] | ;
 
-compas: 'compas''{'(nota|silencio)+'}';
+repeticion: 'repetir''('NUM {validarRepeticiones($NUM.int);} ')''{'compas[$compases::indicacion]+'}';
 
-silencio: 'silencio''('DURACION')'';';
+compas[IndicacionCompas indicacion] returns[Compas compasObj] locals[Double total = 0]: 'compas''{'(nota {$compasObj.notas.add($nota.notaObj);} |silencio {$compasObj.notas.add($silencio.silencioObj);})+'}';
 
-nota returns[Nota notaObj]: 'nota''('ALTURA alteracion?','(OCTAVA|NOMBRE)','DURACION')'';' {$nota::notaObj = new Nota($ALTURA.text, $OCTAVA.int, $DURACION.text, $alteracion != null ? $alteracion.valor : null);};
+silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencio::silencioObj = new Nota(null,null,$DURACION.text,null,$PUNTILLO != null ? true : false);};
+
+nota returns[Nota notaObj]: 'nota''('ALTURA alteracion?',' octava ','DURACION PUNTILLO?')'';' {$nota::notaObj = new Nota($ALTURA.text, 
+	$octava.valor, $DURACION.text, $alteracion != null ? $alteracion.valor : null, $PUNTILLO != null ? true : false);};
 
 octava returns[int valor]: OCTAVA {$octava::valor = $OCTAVA.int;}| NOMBRE {$octava::valor = constantes.get($NOMBRE.text);};
 
 alteracion returns[Character valor] : '+' {$alteracion::valor = '+';}| '-' {$alteracion::valor = '-';};
+
+PUNTILLO : '.';
 
 DURACION : ('blanca'|'negra'|'corchea'|'semicorchea'|'fusa'|'semifusa');
 
