@@ -31,7 +31,18 @@ grammar Musileng;
 		}
 	}
 	
-	static class IndicacionCompas {
+	private void validarDuracion(List<Nota> notas, IndicacionCompas indicacion, int linea) {
+		Double duracion = 0.0;
+		for(Nota nota : notas) {
+			duracion += NotaEnum.valueOf(nota.duracion).getDuracion();
+		}
+		if (duracion > indicacion.duracion()) {
+			String compas = String.valueOf(indicacion.tiempos) + "/" + String.valueOf(indicacion.tipoNota);
+			throw new RuntimeException(String.format("En la linea %s se esta definiendo un compas con mas duracion de la permitida por el compas %s", linea, compas));
+		}
+	}
+	
+	public static class IndicacionCompas {
 		public int tiempos;
 		public int tipoNota;
 		public IndicacionCompas(int tiempos, int tipoNota) {
@@ -40,11 +51,11 @@ grammar Musileng;
 		}
 		
 		public Double duracion() {
-			return tiempos * Double.valueOf(4 / tipoNota);
+			return tiempos * Double.valueOf(4 / Double.valueOf(tipoNota));
 		}
 	}
 	
-	static class Nota {
+	public static class Nota {
 		public String duracion;
 		public String altura;
 		public Character alteracion;
@@ -58,18 +69,36 @@ grammar Musileng;
 		}
 	}
 	
-	static class Compas {
+	public enum NotaEnum {
+		blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
+		
+		private Double duracion;
+		
+		private NotaEnum(Double duracion) {
+			this.duracion = duracion;
+		}
+		
+		public Double getDuracion() {
+			return this.duracion;
+		}
+	}
+	
+	public static class Compas {
 		public List<Nota> notas;
 		public Compas() {
 			this.notas = new ArrayList<Nota>();
 		}
+	}
+	
+	public static class Partitura {
+		
 	}
 }
 
 
 
 //Gramatica 
-s : tempos elcompas constantes melodia[$elcompas.indicacion];
+s returns[Partitura partitura = new Partitura()]: tempos elcompas constantes melodia[$elcompas.indicacion];
 
 tempos: '#tempo' DURACION NUM ;
 
@@ -85,7 +114,7 @@ compases[IndicacionCompas indicacion]: compas[$compases::indicacion] c1 = compas
 
 repeticion: 'repetir''('NUM {validarRepeticiones($NUM.int);} ')''{'compas[$compases::indicacion]+'}';
 
-compas[IndicacionCompas indicacion] returns[Compas compasObj] locals[Double total = 0]: 'compas''{'(nota {$compasObj.notas.add($nota.notaObj);} |silencio {$compasObj.notas.add($silencio.silencioObj);})+'}';
+compas[IndicacionCompas indicacion] returns[Compas compasObj = new Compas()] locals[Double total = 0]: 'compas''{'(nota {$compasObj.notas.add($nota.notaObj);validarDuracion($compasObj.notas, indicacion,0);} |silencio {$compasObj.notas.add($silencio.silencioObj);})+'}';
 
 silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencio::silencioObj = new Nota(null,null,$DURACION.text,null,$PUNTILLO != null ? true : false);};
 
