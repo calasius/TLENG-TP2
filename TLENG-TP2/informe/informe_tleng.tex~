@@ -1,0 +1,151 @@
+\documentclass[a4paper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{makeidx}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{float}
+\lstset{language=C++, showstringspaces=false, tabsize=2, breaklines=true, title=\lstname}
+
+\usepackage[margin=0.5in]{geometry}
+
+\title{TP1 Tleng}
+
+\author{-}
+
+\date{\today}
+
+\makeindex
+
+\begin{document}
+\newgeometry{margin=2cm}
+\pagenumbering{gobble}
+\raggedleft
+\includegraphics[width=8cm]{logo_dc.jpg}\\
+
+\raggedright
+\vspace{3cm}
+{\Huge \bfseries Trabajo Práctico 2}
+\rule{\textwidth}{0.02in}
+\large Miércoles 29 de julio de 2015 \hfill Teoría de Lenguajes
+\vspace{1.5cm}
+
+ 
+\centering \LARGE 
+\vspace{1.5cm}
+
+\normalsize
+\begin{tabular}{|l@{\hspace{4ex}}c@{\hspace{4ex}}l|}
+        \hline
+        \rule{0pt}{1.2em}Integrante & LU & Correo electr\'onico\\[0.2em]
+        \hline
+        \rule{0pt}{1.2em} Aleman, Damián Eliel &377/10 &\tt damian\_8591@hotmail.com \\[0.2em]
+        \rule{0pt}{1.2em} Gauna, Claudio Andrés &733/06 &\tt gauna\_claudio@yahoo.com.ar\\[0.2em]        
+        \hline
+\end{tabular}
+
+\vspace{1.0cm}
+\raggedright
+
+\begin{multicols}{2}
+\includegraphics[width=8cm]{logo_uba.jpg}
+
+\columnbreak
+\vspace*{4.5cm}
+\raggedleft
+\textbf{Facultad de Ciencias Exactas y Naturales}\\
+Universidad de Buenos Aires\\
+\small
+Ciudad Universitaria - (Pabellon I/Planta Baja)\\
+Intendente G\"uiraldes 2160 - C1428EGA\\
+Ciudad Autonoma de Buenos Aires - Rep. Argentina\\
+Tel/Fax: (54 11) 4576-3359\\
+http://www.fcen.uba.ar
+\end{multicols}
+
+\restoregeometry
+
+\clearpage
+
+\pagenumbering{arabic}
+
+\tableofcontents
+
+\vspace{3cm}
+
+\clearpage
+
+
+\section{Introducción}
+El objetivo del trabajo practico es implementar un parser para un lenguaje orientado a la composicion de piezas musicales, llamado Musileng, que luego sera transformado al formato MIDI 1 para su reproduccion.
+
+Por lo tanto los pasos para realizar el trabajo practico son:
+
+\begin{itemize}
+\item Generar la gramatica adecuada, que sintetice el lenguaje orientado a la composicion de las piezas musicales
+\item Escribir los terminales del lenguaje y las reglas del lexer
+\item Escribir los no termianles del lengueje y las reglas del parser.
+\item Agregarle semantica para que pueda imprimir al lenguaje intermedio que pueda ser leido por el programa midcomp
+\item Luego de finalizada la traducci ́on, pueda transformarse a MIDI (.mid) por medio del programa midicomp
+\end{itemize}
+
+
+\section{Grámatica}
+
+A continuación definimos la gramática que generamos para sintetizar el lenguaje:
+Las terminales de la gramática son todas las cadenas que están entre comillas simples y los que se derivan a partir de una regla ( de los tokens en mayúscula).
+
+\texttt{
+\begin{tabular}{ll}
+
+S &$\to$ tempos elcompas constantes melodia
+tempos &$\to$ '\#tempo' DURACION NUM
+elcompas &$\to$  '\#compas' NUM '/' NUM
+constantes &$\to$  constante*
+constante &$\to$  const texto = NUM
+melodia &$\to$  ('voz''('NUM')' \{ compases\} )+ | ('voz''('texto')' \{ compases\} )+
+compases &$\to$ compas compases | repeticion compases
+repeticion &$\to$ 'repetir''('NUM')' '{'compas'}' 
+compas &$\to$ ('compas' '{'nota'}')+ | ('compas' '('silencio')')+
+silencio &$\to$ 'silencio''('DURACION PUNTILLO?')'
+nota &$\to$ 'nota' '('ALTURA ALTERACION?, octava, DURACION PUNTILLO?')'
+octava &$\to$ OCTAVA | TEXTO
+ALTERACION &$\to$ '+' |'-' ;
+PUNTILLO &$\to$ '.';
+DURACION &$\to$ ('blanca'|'negra'|'corchea'|'semicorchea'|'fusa'|'semifusa');
+ALTURA &$\to$ ('do'|'re'|'mi'|'fa'|'sol'|'la'|'si');
+NUM &$\to$ [0-9]+;
+TEXTO &$\to$ [a-zA-Z_]+;
+OCTAVA &$\to$ [1-9] | '1'[0-5];
+
+//para escaper espacios, tabs, y saltos de linea
+WS : [ \t\r\n]+ -> skip ;
+
+\end{tabular}
+}
+
+El símbolo distinguido es S.
+
+El conjunto de no terminales es:
+S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava, 
+
+El conjunto de terminales es:
+ \#tempo/, \#compas, =, ;, ., -, +, (, ), \{, \}, ,,  const, voz, repetir, nota, silencio,  alteracion, puntillo, duracion, Altura, Num, TExto, OCTAVA
+
+Los atributos sintetizados son:
+
+Los atributos heredados son:
+
+
+\end{document}
