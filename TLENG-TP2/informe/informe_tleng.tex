@@ -110,25 +110,25 @@ Las terminales de la gramática son todas las cadenas que están entre comillas 
 
 
 
-S : tempos elcompas constantes melodia \\
-tempos : '\#tempo' DURACION NUM \\
-elcompas :  '\#compas' NUM '/' NUM \\
-constantes :  constante* \\
-constante :  const texto = NUM \\
-melodia :  ('voz''('NUM')' \{ compases\} )+ $|$ ('voz''('texto')' \{ compases\} )+ \\
-compases : compas compases $|$ repeticion compases \\
-repeticion : 'repetir''('NUM')' '{'compas'}' \\
-compas : ('compas' '{'nota'}')+ $|$ ('compas' '('silencio')')+ \\
-silencio : 'silencio''('DURACION PUNTILLO?')' \\
-nota : 'nota' '('ALTURA ALTERACION?, octava, DURACION PUNTILLO?')' \\
-octava : OCTAVA $|$ TEXTO \\
-ALTERACION : '+' $|$'-' ; \\
-PUNTILLO : '.'; \\
-DURACION : ('blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa'); \\
-ALTURA : ('do'$|$'re'$|$'mi'$|$'fa'$|$'sol'$|$'la'$|$'si'); \\
-NUM : [0-9]+; \\
-TEXTO : $[a-zA-Z_]$+; \\
-OCTAVA : [1-9] $|$ '1'[0-5]; \linebreak
+S $\rightarrow$ tempos elcompas constantes melodia \\
+tempos $\rightarrow$ '\#tempo' DURACION NUM \\
+elcompas $\rightarrow$  '\#compas' NUM '/' NUM \\
+constantes $\rightarrow$  constante* \\
+constante $\rightarrow$  const texto = NUM \\
+melodia $\rightarrow$  ('voz''('NUM')' \{ compases\} )+ $|$ ('voz''('texto')' \{ compases\} )+ \\
+compases $\rightarrow$ compas compases $|$ repeticion compases \\
+repeticion $\rightarrow$ 'repetir''('NUM')' '{'compas'}' \\
+compas $\rightarrow$ ('compas' '{'nota'}')+ $|$ ('compas' '('silencio')')+ \\
+silencio $\rightarrow$ 'silencio''('DURACION PUNTILLO?')' \\
+nota $\rightarrow$ 'nota' '('ALTURA ALTERACION?, octava, DURACION PUNTILLO?')' \\
+octava $\rightarrow$ OCTAVA $|$ TEXTO \\
+ALTERACION $\rightarrow$ '+' $|$'-' ; \\
+PUNTILLO $\rightarrow$ '.'; \\
+DURACION $\rightarrow$ ('blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa'); \\
+ALTURA $\rightarrow$ ('do'$|$'re'$|$'mi'$|$'fa'$|$'sol'$|$'la'$|$'si'); \\
+NUM $\rightarrow$ [0-9]+; \\
+TEXTO $\rightarrow$ $[a-zA-Z\_]$+; \\
+OCTAVA $\rightarrow$ [1-9] $|$ '1'[0-5]; \linebreak
 
 
 
@@ -142,8 +142,8 @@ El conjunto de no terminales es:\linebreak
 
 \section{Atributos}
 
-Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramatica genere el lenguaje que necesitamos. Los atributos tambien los usaremos
-para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp.
+Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramatica genere el lenguaje que necesitamos.
+Los atributos tambien los usaremos para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp.
 
 El conjunto de terminales es: \\
 \texttt{
@@ -156,14 +156,34 @@ Los atributos sintetizados son:\\
 }\\  
 
 
-Los atributos heredados son: \\
+Los atributos heredados son: 
 \texttt{
 \{indicacion\}
 }\\  
 
 Ahora haremos una breve explicacion de cada atributo:
 
-partitura:
+\begin{itemize}
+\item partitura: almacena el tempo, la indicacion y la lista de voces. 
+
+\item tempo: Este atributo guarda la informacion de la duracion de la figura y la cantidad de veces que entra esa figura en un minuto.
+
+\item indicacion: Almacena el numerador y el denominador definidos del compas.
+
+\item voces:La lista de voces de la melodia
+
+\item listaCompases: la lista de los compasObj y las repetcionesObj
+
+\item compasObj: Tiene la lista de notas  de cada compas
+\item repeticiones: almacena la cantidad de repeticiones
+\item notaObj: Almacena la altura,de que octava es, la duracion, la alteracion y si tiene puntillo
+\item silencioObj: Tiene la lista de silencios de cada compas
+\item valor: el valor de la octava 
+\item listacompases: Tiene todos los compases definidos
+
+\end{itemize}
+
+
 
 
 
