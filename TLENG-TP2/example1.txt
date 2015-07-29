@@ -1,11 +1,11 @@
 #tempo redonda 60
 #compas 2/2
 
-const octava = 10;
-const grand_piano = 0;
+const octava = 9;
+const a = 0;
 
 
-voz (grand_piano)
+voz (a)
 {
 compas
 {
@@ -22,7 +22,8 @@ compas
 nota(sol-, octava, negra);
 nota(sol, octava, negra);
 nota(sol+, octava, negra);
-nota(la, octava, negra);
+nota(sol+, octava, negra);
+// comentario
 }
 compas
 {
