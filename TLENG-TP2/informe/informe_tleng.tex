@@ -112,10 +112,6 @@ El conjunto de terminales es: \texttt{
 }\linebreak
 
 
-A continuación definimos la gramática que generamos para sintetizar el lenguaje:
-Las terminales de la gramática son todas las cadenas que están entre comillas simples y los que se derivan a partir de una regla ( de los tokens en mayúscula).
-
-
 \subsection{Lexer}
 A la gramatica del lexer, le dimos reglas para que pueda reconocer los tokens:\\
 TEMPO$\rightarrow$ 'tempo'; \\
@@ -182,7 +178,8 @@ El conjunto de no terminales es:\linebreak
 \subsection{Atributos}
 
 Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramática genere el lenguaje que necesitamos.
-Los atributos también los usaremos para realizar la traducción al lenguaje intermedio para que sea legible por el programa midcomp. \linebreak
+Por ejemplo que haya la misma duracion en dos compases distintos.\\
+Los atributos también los usaremos para realizar la traducción al lenguaje intermedio para que sea legible por el programa midicomp. \linebreak
 
 
 Los atributos sintetizados son:\texttt{
