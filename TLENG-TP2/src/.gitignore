@@ -10,3 +10,5 @@
 /MusilengLexer.tokens
 /MusilengListener.java
 /MusilengParser.java
+/lexerGrammar.java
+/lexerGrammar.tokens
