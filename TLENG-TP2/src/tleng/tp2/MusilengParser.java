@@ -319,7 +319,6 @@ public class MusilengParser extends Parser {
 		finally {
 			exitRule();
 		}
-		System.out.println(((SContext)_localctx).partitura);
 		return _localctx;
 	}
 
@@ -635,6 +634,7 @@ public class MusilengParser extends Parser {
 		public IndicacionCompas indicacion;
 		public List<Compas> listaCompases;
 		public CompasContext compas;
+		public CompasesContext c1;
 		public RepeticionContext repeticion;
 		public CompasesContext compases() {
 			return getRuleContext(CompasesContext.class,0);
@@ -665,7 +665,7 @@ public class MusilengParser extends Parser {
 		CompasesContext _localctx = new CompasesContext(_ctx, getState(), indicacion);
 		enterRule(_localctx, 12, RULE_compases);
 		try {
-			setState(91);
+			setState(92);
 			switch (_input.LA(1)) {
 			case T__3:
 				enterOuterAlt(_localctx, 1);
@@ -673,21 +673,23 @@ public class MusilengParser extends Parser {
 				((CompasesContext)_localctx).listaCompases =  new ArrayList<Compas>();
 				setState(81); ((CompasesContext)_localctx).compas = compas(_localctx.indicacion);
 				_localctx.listaCompases.add(((CompasesContext)_localctx).compas.compasObj);
-				setState(83); compases(_localctx.indicacion);
+				setState(83); ((CompasesContext)_localctx).c1 = compases(_localctx.indicacion);
+				 _localctx.listaCompases.addAll(((CompasesContext)_localctx).c1.listaCompases);
 				}
 				break;
 			case T__10:
 				enterOuterAlt(_localctx, 2);
 				{
 				((CompasesContext)_localctx).listaCompases =  new ArrayList<Compas>();
-				setState(86); ((CompasesContext)_localctx).repeticion = repeticion(_localctx.indicacion);
+				setState(87); ((CompasesContext)_localctx).repeticion = repeticion(_localctx.indicacion);
 				agregarRepetidos(_localctx.listaCompases,((CompasesContext)_localctx).repeticion.listaCompases,((CompasesContext)_localctx).repeticion.repeticiones);
-				setState(88); compases(_localctx.indicacion);
+				setState(89); compases(_localctx.indicacion);
 				}
 				break;
 			case T__6:
 				enterOuterAlt(_localctx, 3);
 				{
+				((CompasesContext)_localctx).listaCompases =  new ArrayList<Compas>();
 				}
 				break;
 			default:
@@ -742,28 +744,29 @@ public class MusilengParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			((RepeticionContext)_localctx).listaCompases =  new ArrayList<Compas>();
-			setState(94); match(T__10);
-			setState(95); match(T__2);
-			setState(96); ((RepeticionContext)_localctx).NUM = match(NUM);
-			setState(97);
+			setState(95); match(T__10);
+			setState(96); match(T__2);
+			setState(97); ((RepeticionContext)_localctx).NUM = match(NUM);
+			setState(98);
 			if (!((((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "$NUM.int > 0");
-			setState(98); match(T__1);
-			setState(99); match(T__8);
-			setState(101); 
+			setState(99); match(T__1);
+			setState(100); match(T__8);
+			setState(104); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(100); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
+				setState(101); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
+				_localctx.listaCompases.add(((RepeticionContext)_localctx).compas.compasObj);
 				}
 				}
-				setState(103); 
+				setState(106); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__3 );
-			_localctx.listaCompases.add(((RepeticionContext)_localctx).compas.compasObj);((RepeticionContext)_localctx).repeticiones =  (((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0);
-			setState(106); match(T__6);
+			((RepeticionContext)_localctx).repeticiones =  (((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0);
+			setState(109); match(T__6);
 			}
 		}
 		catch (RecognitionException re) {
@@ -818,24 +821,24 @@ public class MusilengParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			((CompasContext)_localctx).compasObj =  new Compas();
-			setState(109); match(T__3);
-			setState(110); match(T__8);
-			setState(117); 
+			setState(112); match(T__3);
+			setState(113); match(T__8);
+			setState(120); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(117);
+				setState(120);
 				switch (_input.LA(1)) {
 				case T__14:
 					{
-					setState(111); ((CompasContext)_localctx).nota = nota();
+					setState(114); ((CompasContext)_localctx).nota = nota();
 					_localctx.compasObj.notas.add(((CompasContext)_localctx).nota.notaObj);
 					}
 					break;
 				case T__11:
 					{
-					setState(114); ((CompasContext)_localctx).silencio = silencio();
+					setState(117); ((CompasContext)_localctx).silencio = silencio();
 					_localctx.compasObj.notas.add(((CompasContext)_localctx).silencio.silencioObj);
 					}
 					break;
@@ -843,12 +846,12 @@ public class MusilengParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(119); 
+				setState(122); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__14 || _la==T__11 );
-			setState(121); match(T__6);
-			setState(122);
+			setState(124); match(T__6);
+			setState(125);
 			if (!(validarDuracion(_localctx.compasObj.notas, _localctx.indicacion))) throw new FailedPredicateException(this, "validarDuracion($compasObj.notas, $indicacion)");
 			}
 		}
@@ -890,19 +893,19 @@ public class MusilengParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(124); match(T__11);
-			setState(125); match(T__2);
-			setState(126); ((SilencioContext)_localctx).DURACION = match(DURACION);
-			setState(128);
+			setState(127); match(T__11);
+			setState(128); match(T__2);
+			setState(129); ((SilencioContext)_localctx).DURACION = match(DURACION);
+			setState(131);
 			_la = _input.LA(1);
 			if (_la==PUNTILLO) {
 				{
-				setState(127); ((SilencioContext)_localctx).PUNTILLO = match(PUNTILLO);
+				setState(130); ((SilencioContext)_localctx).PUNTILLO = match(PUNTILLO);
 				}
 			}
 
-			setState(130); match(T__1);
-			setState(131); match(T__7);
+			setState(133); match(T__1);
+			setState(134); match(T__7);
 			((SilencioContext)_localctx).silencioObj =  new Nota(null,null,(((SilencioContext)_localctx).DURACION!=null?((SilencioContext)_localctx).DURACION.getText():null),((SilencioContext)_localctx).PUNTILLO != null ? true : false);
 			}
 		}
@@ -950,23 +953,23 @@ public class MusilengParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(134); match(T__14);
-			setState(135); match(T__2);
-			setState(136); ((NotaContext)_localctx).ALTURA = match(ALTURA);
-			setState(137); match(T__0);
-			setState(138); ((NotaContext)_localctx).octava = octava();
-			setState(139); match(T__0);
-			setState(140); ((NotaContext)_localctx).DURACION = match(DURACION);
-			setState(142);
+			setState(137); match(T__14);
+			setState(138); match(T__2);
+			setState(139); ((NotaContext)_localctx).ALTURA = match(ALTURA);
+			setState(140); match(T__0);
+			setState(141); ((NotaContext)_localctx).octava = octava();
+			setState(142); match(T__0);
+			setState(143); ((NotaContext)_localctx).DURACION = match(DURACION);
+			setState(145);
 			_la = _input.LA(1);
 			if (_la==PUNTILLO) {
 				{
-				setState(141); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
+				setState(144); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
 				}
 			}
 
-			setState(144); match(T__1);
-			setState(145); match(T__7);
+			setState(147); match(T__1);
+			setState(148); match(T__7);
 			((NotaContext)_localctx).notaObj =  new Nota((((NotaContext)_localctx).ALTURA!=null?((NotaContext)_localctx).ALTURA.getText():null),((NotaContext)_localctx).octava.valor,(((NotaContext)_localctx).DURACION!=null?((NotaContext)_localctx).DURACION.getText():null), ((NotaContext)_localctx).PUNTILLO != null);
 			}
 		}
@@ -1005,19 +1008,19 @@ public class MusilengParser extends Parser {
 		OctavaContext _localctx = new OctavaContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_octava);
 		try {
-			setState(152);
+			setState(155);
 			switch (_input.LA(1)) {
 			case OCTAVA:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(148); ((OctavaContext)_localctx).OCTAVA = match(OCTAVA);
+				setState(151); ((OctavaContext)_localctx).OCTAVA = match(OCTAVA);
 				((OctavaContext)_localctx).valor =  (((OctavaContext)_localctx).OCTAVA!=null?Integer.valueOf(((OctavaContext)_localctx).OCTAVA.getText()):0);
 				}
 				break;
 			case NOMBRE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(150); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
+				setState(153); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
 				((OctavaContext)_localctx).valor =  constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null));
 				}
 				break;
@@ -1080,47 +1083,48 @@ public class MusilengParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\u009d\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\u00a0\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\4\3\4\3\4\3\4\3\4\3\4\3\5\7\5.\n\5\f\5\16\5\61\13\5\3\6\3\6\3\6\3\6"+
 		"\3\6\3\6\3\6\5\6:\n\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\5\7F\n\7"+
 		"\3\7\3\7\3\7\3\7\3\7\3\7\3\7\6\7O\n\7\r\7\16\7P\3\b\3\b\3\b\3\b\3\b\3"+
-		"\b\3\b\3\b\3\b\3\b\3\b\5\b^\n\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\6\th\n"+
-		"\t\r\t\16\ti\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\6\nx\n\n"+
-		"\r\n\16\ny\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5\13\u0083\n\13\3\13\3\13\3"+
-		"\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0091\n\f\3\f\3\f\3\f\3\f"+
-		"\3\r\3\r\3\r\3\r\5\r\u009b\n\r\3\r\2\2\16\2\4\6\b\n\f\16\20\22\24\26\30"+
-		"\2\2\u009c\2\32\3\2\2\2\4 \3\2\2\2\6&\3\2\2\2\b/\3\2\2\2\n\62\3\2\2\2"+
-		"\f=\3\2\2\2\16]\3\2\2\2\20_\3\2\2\2\22n\3\2\2\2\24~\3\2\2\2\26\u0088\3"+
-		"\2\2\2\30\u009a\3\2\2\2\32\33\5\4\3\2\33\34\5\6\4\2\34\35\5\b\5\2\35\36"+
-		"\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7\t\2\2!\"\7\24\2\2\"#\7\26\2\2"+
-		"#$\b\3\1\2$%\6\3\2\3%\5\3\2\2\2&\'\7\6\2\2\'(\7\26\2\2()\7\3\2\2)*\7\26"+
-		"\2\2*+\b\4\1\2+\7\3\2\2\2,.\5\n\6\2-,\3\2\2\2.\61\3\2\2\2/-\3\2\2\2/\60"+
-		"\3\2\2\2\60\t\3\2\2\2\61/\3\2\2\2\62\63\7\5\2\2\63\64\7\27\2\2\649\7\16"+
-		"\2\2\65\66\7\26\2\2\66:\6\6\3\3\678\7\27\2\28:\6\6\4\39\65\3\2\2\29\67"+
-		"\3\2\2\2:;\3\2\2\2;<\7\13\2\2<\13\3\2\2\2=N\b\7\1\2>?\7\r\2\2?E\7\20\2"+
-		"\2@A\7\26\2\2AF\b\7\1\2BC\7\27\2\2CD\6\7\5\3DF\b\7\1\2E@\3\2\2\2EB\3\2"+
-		"\2\2FG\3\2\2\2GH\7\21\2\2HI\7\n\2\2IJ\5\16\b\2JK\7\f\2\2KL\6\7\6\3LM\b"+
-		"\7\1\2MO\3\2\2\2N>\3\2\2\2OP\3\2\2\2PN\3\2\2\2PQ\3\2\2\2Q\r\3\2\2\2RS"+
-		"\b\b\1\2ST\5\22\n\2TU\b\b\1\2UV\5\16\b\2V^\3\2\2\2WX\b\b\1\2XY\5\20\t"+
-		"\2YZ\b\b\1\2Z[\5\16\b\2[^\3\2\2\2\\^\3\2\2\2]R\3\2\2\2]W\3\2\2\2]\\\3"+
-		"\2\2\2^\17\3\2\2\2_`\b\t\1\2`a\7\b\2\2ab\7\20\2\2bc\7\26\2\2cd\6\t\7\3"+
-		"de\7\21\2\2eg\7\n\2\2fh\5\22\n\2gf\3\2\2\2hi\3\2\2\2ig\3\2\2\2ij\3\2\2"+
-		"\2jk\3\2\2\2kl\b\t\1\2lm\7\f\2\2m\21\3\2\2\2no\b\n\1\2op\7\17\2\2pw\7"+
-		"\n\2\2qr\5\26\f\2rs\b\n\1\2sx\3\2\2\2tu\5\24\13\2uv\b\n\1\2vx\3\2\2\2"+
-		"wq\3\2\2\2wt\3\2\2\2xy\3\2\2\2yw\3\2\2\2yz\3\2\2\2z{\3\2\2\2{|\7\f\2\2"+
-		"|}\6\n\b\3}\23\3\2\2\2~\177\7\7\2\2\177\u0080\7\20\2\2\u0080\u0082\7\24"+
-		"\2\2\u0081\u0083\7\23\2\2\u0082\u0081\3\2\2\2\u0082\u0083\3\2\2\2\u0083"+
-		"\u0084\3\2\2\2\u0084\u0085\7\21\2\2\u0085\u0086\7\13\2\2\u0086\u0087\b"+
-		"\13\1\2\u0087\25\3\2\2\2\u0088\u0089\7\4\2\2\u0089\u008a\7\20\2\2\u008a"+
-		"\u008b\7\25\2\2\u008b\u008c\7\22\2\2\u008c\u008d\5\30\r\2\u008d\u008e"+
-		"\7\22\2\2\u008e\u0090\7\24\2\2\u008f\u0091\7\23\2\2\u0090\u008f\3\2\2"+
-		"\2\u0090\u0091\3\2\2\2\u0091\u0092\3\2\2\2\u0092\u0093\7\21\2\2\u0093"+
-		"\u0094\7\13\2\2\u0094\u0095\b\f\1\2\u0095\27\3\2\2\2\u0096\u0097\7\30"+
-		"\2\2\u0097\u009b\b\r\1\2\u0098\u0099\7\27\2\2\u0099\u009b\b\r\1\2\u009a"+
-		"\u0096\3\2\2\2\u009a\u0098\3\2\2\2\u009b\31\3\2\2\2\r/9EP]iwy\u0082\u0090"+
-		"\u009a";
+		"\b\3\b\3\b\3\b\3\b\3\b\3\b\5\b_\n\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3"+
+		"\t\3\t\6\tk\n\t\r\t\16\tl\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n"+
+		"\3\n\6\n{\n\n\r\n\16\n|\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5\13\u0086\n\13"+
+		"\3\13\3\13\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0094\n\f\3\f"+
+		"\3\f\3\f\3\f\3\r\3\r\3\r\3\r\5\r\u009e\n\r\3\r\2\2\16\2\4\6\b\n\f\16\20"+
+		"\22\24\26\30\2\2\u009f\2\32\3\2\2\2\4 \3\2\2\2\6&\3\2\2\2\b/\3\2\2\2\n"+
+		"\62\3\2\2\2\f=\3\2\2\2\16^\3\2\2\2\20`\3\2\2\2\22q\3\2\2\2\24\u0081\3"+
+		"\2\2\2\26\u008b\3\2\2\2\30\u009d\3\2\2\2\32\33\5\4\3\2\33\34\5\6\4\2\34"+
+		"\35\5\b\5\2\35\36\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7\t\2\2!\"\7\24"+
+		"\2\2\"#\7\26\2\2#$\b\3\1\2$%\6\3\2\3%\5\3\2\2\2&\'\7\6\2\2\'(\7\26\2\2"+
+		"()\7\3\2\2)*\7\26\2\2*+\b\4\1\2+\7\3\2\2\2,.\5\n\6\2-,\3\2\2\2.\61\3\2"+
+		"\2\2/-\3\2\2\2/\60\3\2\2\2\60\t\3\2\2\2\61/\3\2\2\2\62\63\7\5\2\2\63\64"+
+		"\7\27\2\2\649\7\16\2\2\65\66\7\26\2\2\66:\6\6\3\3\678\7\27\2\28:\6\6\4"+
+		"\39\65\3\2\2\29\67\3\2\2\2:;\3\2\2\2;<\7\13\2\2<\13\3\2\2\2=N\b\7\1\2"+
+		">?\7\r\2\2?E\7\20\2\2@A\7\26\2\2AF\b\7\1\2BC\7\27\2\2CD\6\7\5\3DF\b\7"+
+		"\1\2E@\3\2\2\2EB\3\2\2\2FG\3\2\2\2GH\7\21\2\2HI\7\n\2\2IJ\5\16\b\2JK\7"+
+		"\f\2\2KL\6\7\6\3LM\b\7\1\2MO\3\2\2\2N>\3\2\2\2OP\3\2\2\2PN\3\2\2\2PQ\3"+
+		"\2\2\2Q\r\3\2\2\2RS\b\b\1\2ST\5\22\n\2TU\b\b\1\2UV\5\16\b\2VW\b\b\1\2"+
+		"W_\3\2\2\2XY\b\b\1\2YZ\5\20\t\2Z[\b\b\1\2[\\\5\16\b\2\\_\3\2\2\2]_\b\b"+
+		"\1\2^R\3\2\2\2^X\3\2\2\2^]\3\2\2\2_\17\3\2\2\2`a\b\t\1\2ab\7\b\2\2bc\7"+
+		"\20\2\2cd\7\26\2\2de\6\t\7\3ef\7\21\2\2fj\7\n\2\2gh\5\22\n\2hi\b\t\1\2"+
+		"ik\3\2\2\2jg\3\2\2\2kl\3\2\2\2lj\3\2\2\2lm\3\2\2\2mn\3\2\2\2no\b\t\1\2"+
+		"op\7\f\2\2p\21\3\2\2\2qr\b\n\1\2rs\7\17\2\2sz\7\n\2\2tu\5\26\f\2uv\b\n"+
+		"\1\2v{\3\2\2\2wx\5\24\13\2xy\b\n\1\2y{\3\2\2\2zt\3\2\2\2zw\3\2\2\2{|\3"+
+		"\2\2\2|z\3\2\2\2|}\3\2\2\2}~\3\2\2\2~\177\7\f\2\2\177\u0080\6\n\b\3\u0080"+
+		"\23\3\2\2\2\u0081\u0082\7\7\2\2\u0082\u0083\7\20\2\2\u0083\u0085\7\24"+
+		"\2\2\u0084\u0086\7\23\2\2\u0085\u0084\3\2\2\2\u0085\u0086\3\2\2\2\u0086"+
+		"\u0087\3\2\2\2\u0087\u0088\7\21\2\2\u0088\u0089\7\13\2\2\u0089\u008a\b"+
+		"\13\1\2\u008a\25\3\2\2\2\u008b\u008c\7\4\2\2\u008c\u008d\7\20\2\2\u008d"+
+		"\u008e\7\25\2\2\u008e\u008f\7\22\2\2\u008f\u0090\5\30\r\2\u0090\u0091"+
+		"\7\22\2\2\u0091\u0093\7\24\2\2\u0092\u0094\7\23\2\2\u0093\u0092\3\2\2"+
+		"\2\u0093\u0094\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0096\7\21\2\2\u0096"+
+		"\u0097\7\13\2\2\u0097\u0098\b\f\1\2\u0098\27\3\2\2\2\u0099\u009a\7\30"+
+		"\2\2\u009a\u009e\b\r\1\2\u009b\u009c\7\27\2\2\u009c\u009e\b\r\1\2\u009d"+
+		"\u0099\3\2\2\2\u009d\u009b\3\2\2\2\u009e\31\3\2\2\2\r/9EP^lz|\u0085\u0093"+
+		"\u009d";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

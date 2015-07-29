@@ -233,11 +233,11 @@ melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrum
 		'{'compases[$indicacion]'}' {validarAlMenosUnCompas($compases.listaCompases)}? {$voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 
-		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} compases[$indicacion] | 
-		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | ;
+		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} c1 = compases[$indicacion] { $listaCompases.addAll($c1.listaCompases);} | 
+		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | {$listaCompases = new ArrayList<Compas>();};
 
 repeticion[IndicacionCompas indicacion] returns [List<Compas> listaCompases, int repeticiones]:
-		{$listaCompases = new ArrayList<Compas>();} 'repetir''('NUM {$NUM.int > 0}?')''{'compas[$indicacion]+ {$listaCompases.add($compas.compasObj);$repeticiones = $NUM.int;}'}';
+		{$listaCompases = new ArrayList<Compas>();} 'repetir''('NUM {$NUM.int > 0}?')''{'(compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;}'}';
 
 compas[IndicacionCompas indicacion] returns[Compas compasObj]: 
 		{$compasObj = new Compas();}'compas''{'(
