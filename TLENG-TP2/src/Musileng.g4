@@ -1,5 +1,7 @@
 grammar Musileng;
 
+import lexerGrammar;
+
 @header {
 	import java.util.HashMap;
 	import java.util.Map;
@@ -7,55 +9,48 @@ grammar Musileng;
 	import java.util.ArrayList;
 }
 
-@members {
+@parser::members {
 	private Map<String,Integer> constantes = new HashMap<String,Integer>();
 	
-	private void agregarConstante(String nombre, Integer valor) {
-		if (constantes.containsKey(nombre)) {
-			throw new RuntimeException(String.format("La constante \"%s\" ya esta fue definida",nombre));
-		}
-		constantes.put(nombre, valor);
-	}
-	
-	private void agregarConstante(String nombre, String valor,int line) {
+	private boolean agregarConstante(String nombre, String valor) {
 		if (constantes.containsKey(valor)) {
 			constantes.put(nombre,constantes.get(valor));
+			return true;
 		} else {
-			throw new RuntimeException(String.format("La constante \"%s\"no esta previamante declarada",valor));
+			return false;
 		}
 	}
 	
-	private void validarRepeticiones(int valor) {
-		if (valor <= 0) {
-			throw new RuntimeException("La cantidad de repetiones tiene que ser mayor que cero");
+	private boolean agregarConstante(String nombre, Integer valor) {
+		if (constantes.containsKey(nombre)) {
+			return false;
 		}
+		constantes.put(nombre, valor);
+		return true;
 	}
 	
-	private void validarDuracion(List<Nota> notas, IndicacionCompas indicacion, int linea) {
+	private boolean validarRepeticiones(int valor) {
+		return valor > 0;
+	}
+	
+	private boolean validarDuracion(List<Nota> notas, IndicacionCompas indicacion) {
 		Double duracion = 0.0;
 		for(Nota nota : notas) {
 			duracion += nota.calcularDuracion();
 		}
-		if (duracion.compareTo(indicacion.duracion()) != 0) {
-			String compas = String.valueOf(indicacion.tiempos) + "/" + String.valueOf(indicacion.tipoNota);
-			throw new RuntimeException(String.format("En la linea %s se esta definiendo un compas con mas duracion de la permitida por el compas %s", linea, compas));
-		}
+		return duracion.compareTo(indicacion.duracion()) == 0;
 	}
 	
-	private void validarAlMenosUnCompas(List<Compas> listaCompases, int linea) {
-		if (listaCompases.isEmpty()) {
-			throw new RuntimeException(String.format("En la linea %s no se define ningun compas",linea));
-		}
+	private boolean validarAlMenosUnCompas(List<Compas> listaCompases) {
+		return !listaCompases.isEmpty();
 	}
 	
-	private void validarInstrumento(int instrumento, int linea) {
-		if (instrumento < 0 || instrumento > 20) {
-			throw new RuntimeException(String.format("Linea %s. El instrumento tiene que ser mayor que cero y mentor que %s", linea, 20));
-		}
+	private boolean validarInstrumento(int instrumento) {
+		return instrumento >= 0 && instrumento <= 127;
 	}
 		
-	private void validarTempo(Tempo tempo) {
-		
+	private boolean validarTempo(Tempo tempo) {
+		return true;
 	}
 	
 	private void agregarRepetidos(List<Compas> listaCompases, List<Compas> nuevos, int repeticiones) {
@@ -106,7 +101,7 @@ grammar Musileng;
 	}
 	
 	public enum NotaEnum {
-		blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
+		redonda(4.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
 		
 		private Double duracion;
 		
@@ -180,50 +175,33 @@ grammar Musileng;
 //Gramatica 
 s returns[Partitura partitura]: tempos elcompas constantes melodia[$elcompas.indicacion] {$partitura = new Partitura($tempos.tempo, $elcompas.indicacion, $melodia.voces);};
 
-tempos returns[Tempo tempo]: '#tempo' DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int); validarTempo($tempo);};
+tempos returns[Tempo tempo]: '#tempo' DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{validarTempo($tempo)}? ;
 
 elcompas returns [IndicacionCompas indicacion] : '#compas' n1 = NUM'/' n2 = NUM {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
 
 constantes: constante*;
 
-constante: 'const' n1 = NOMBRE'='(NUM {agregarConstante($n1.text, $NUM.int);}|n2 = NOMBRE{agregarConstante($n1.text, $n2.text, $n1.line);})';';
+constante: 'const' n1 = NOMBRE'='(NUM {agregarConstante($n1.text, $NUM.int)}?|n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}?)';';
 
 melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrumento]: {$voces = new ArrayList<Voz>();} 
-		('voz''('(NUM {$instrumento = $NUM.int;}|NOMBRE {$instrumento = constantes.get($NOMBRE.text);})')'
-		'{'compases[$indicacion]'}' {validarAlMenosUnCompas($compases.listaCompases,0); $voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
+		('voz''('(NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);})')'
+		'{'compases[$indicacion]'}' {validarAlMenosUnCompas($compases.listaCompases)}? {$voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 
 		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} compases[$indicacion] | 
 		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | ;
 
 repeticion[IndicacionCompas indicacion] returns [List<Compas> listaCompases, int repeticiones]:
-		{$listaCompases = new ArrayList<Compas>();} 'repetir''('NUM {validarRepeticiones($NUM.int); $repeticiones = $NUM.int;}')''{'compas[$indicacion]+ {$listaCompases.add($compas.compasObj);}'}';
+		{$listaCompases = new ArrayList<Compas>();} 'repetir''('NUM {$NUM.int > 0}?')''{'compas[$indicacion]+ {$listaCompases.add($compas.compasObj);$repeticiones = $NUM.int;}'}';
 
 compas[IndicacionCompas indicacion] returns[Compas compasObj]: 
 		{$compasObj = new Compas();}'compas''{'(
 			nota {$compasObj.notas.add($nota.notaObj);} |
 			silencio {$compasObj.notas.add($silencio.silencioObj);}
-		)+'}'{validarDuracion($compasObj.notas, indicacion,0);};
+		)+'}'{validarDuracion($compasObj.notas, $indicacion)}?;
 
 silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencioObj = new Nota(null,null,$DURACION.text,null,$PUNTILLO != null ? true : false);};
 
 nota returns[Nota notaObj] : 'nota''('ALTURA ALTERACION? ',' octava ','DURACION PUNTILLO?')'';' {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $ALTERACION != null ? $ALTERACION.text : null, $PUNTILLO != null);};
 
 octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {$valor = constantes.get($NOMBRE.text);};
-
-ALTERACION : '+' |'-' ;
-
-PUNTILLO : '.';
-
-DURACION : ('blanca'|'negra'|'corchea'|'semicorchea'|'fusa'|'semifusa');
-
-ALTURA : ('do'|'re'|'mi'|'fa'|'sol'|'la'|'si');
-
-NUM: [0-9]+;
-
-NOMBRE: [a-zA-Z_]+;
-
-OCTAVA: [1-9] | '1'[0-5];
-
-//para escaper espacios, tabs, y saltos de linea
-WS : [ \t\r\n]+ -> skip ;

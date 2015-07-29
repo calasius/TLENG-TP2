@@ -1,3 +1,4 @@
+package tleng.tp2;
 import java.io.IOException;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
@@ -5,9 +6,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
 
-
-
-
+import tleng.tp2.MusilengParser.Partitura;
 
 public class Test {
 	
@@ -16,7 +15,7 @@ public class Test {
 		MusilengLexer lexer = new MusilengLexer(charStream);
 		TokenStream tokenStream = new CommonTokenStream(lexer);
 		MusilengParser parser = new MusilengParser(tokenStream);
-		parser.s();
+		Partitura partitura = parser.s().partitura;
 	}
 
 }

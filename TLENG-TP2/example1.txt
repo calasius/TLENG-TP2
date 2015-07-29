@@ -5,7 +5,7 @@ const grand_piano = 0;
 voz (grand_piano)
 {
 
-repetir(2)
+repetir(1)
 {
 compas
 {
