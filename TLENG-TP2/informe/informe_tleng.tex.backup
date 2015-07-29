@@ -105,39 +105,39 @@ Utilizamos para el trabajo la herramienta ANTLR para generar el parser (y el lex
 
 \section{Grámatica}
 
-A continuación definimos la gramática que generamos para sintetizar el lenguaje:
-Las terminales de la gramática son todas las cadenas que están entre comillas simples y los que se derivan a partir de una regla ( de los tokens en mayúscula).
-
-
-
-S $\rightarrow$ tempos elcompas constantes melodia \\
-tempos $\rightarrow$ '\#tempo' DURACION NUM \\
-elcompas $\rightarrow$  '\#compas' NUM '/' NUM \\
-constantes $\rightarrow$  constante* \\
-constante $\rightarrow$  const texto = NUM \\
-melodia $\rightarrow$  ('voz''('NUM')' \{ compases\} )+ $|$ ('voz''('texto')' \{ compases\} )+ \\
-compases $\rightarrow$ compas compases $|$ repeticion compases \\
-repeticion $\rightarrow$ 'repetir''('NUM')' '{'compas'}' \\
-compas $\rightarrow$ ('compas' '{'nota'}')+ $|$ ('compas' '('silencio')')+ \\
-silencio $\rightarrow$ 'silencio''('DURACION PUNTILLO?')' \\
-nota $\rightarrow$ 'nota' '('ALTURA ALTERACION?, octava, DURACION PUNTILLO?')' \\
-octava $\rightarrow$ OCTAVA $|$ TEXTO \\
-ALTERACION $\rightarrow$ '+' $|$'-' ; \\
-PUNTILLO $\rightarrow$ '.'; \\
-DURACION $\rightarrow$ ('blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa'); \\
-ALTURA $\rightarrow$ ('do'$|$'re'$|$'mi'$|$'fa'$|$'sol'$|$'la'$|$'si'); \\
-NUM $\rightarrow$ [0-9]+; \\
-TEXTO $\rightarrow$ $[a-zA-Z\_]$+; \\
-OCTAVA $\rightarrow$ [1-9] $|$ '1'[0-5]; \linebreak
-
-
-
-El símbolo distinguido es S.\linebreak
+Primero mostramos la gramatica del lexer que lee el archivo como secuencia de caracteres y los mapea a una secuencia de simbolos terminales. 
 
 El conjunto de terminales es: \\
 \texttt{
 \{\#tempo/, \#compas, =, ;, ., -, +, (, ), \{, \}, ,,  const, voz, repetir, nota, silencio, blanca, negra, corchea, semicorchea, fusa, semifusa, do , re , mi , fa, sol, la, si  \}
 }\linebreak
+
+
+A continuación definimos la gramática que generamos para sintetizar el lenguaje:
+Las terminales de la gramática son todas las cadenas que están entre comillas simples y los que se derivan a partir de una regla ( de los tokens en mayúscula).
+
+
+
+
+
+S $\rightarrow$ tempos elcompas constantes melodia \\
+tempos $\rightarrow$ NUMERAL TEMPO DURACION NUM \\
+elcompas $\rightarrow$  NUMERAL COMPAS NUM SLASH NUM \\
+constantes $\rightarrow$  constante* \\
+constante $\rightarrow$  CONST texto IGUAL NUM \\
+melodia $\rightarrow$  (VOZ LPAREN LPAREN NUM RPAREN \{ compases\} )+ $|$ (VOZ LPAREN texto RPAREN \{ compases\} )+ \\
+compases $\rightarrow$ compas compases $|$ repeticion compases \\
+repeticion $\rightarrow$ REPETIR LPAREN NUM RPAREN LBRACE compas RBRACE \\
+compas $\rightarrow$ (COMPAS LBRACE nota RBRACE)+ $|$ (COMPAS LPAREN silencio RPAREN )+ \\
+silencio $\rightarrow$ SILENCIO LPAREN DURACION PUNTILLO? RPAREN  \\
+nota $\rightarrow$ NOTA LPAREN ALTURA ALTERACION?, octava, DURACION PUNTILLO? RPAREN  \\
+octava $\rightarrow$ OCTAVA $|$ TEXTO \\
+
+
+
+
+El símbolo distinguido es S.\linebreak
+
 
 
 El conjunto de no terminales es:\linebreak
@@ -181,6 +181,20 @@ Ahora haremos una breve explicacion de cada atributo:
 \section{Modo de uso}
 
 \section{Tests}
+
+Realizamos una serie de tests para verificar que el parser funciona correctamente. Para ello le dimos como entrada al parser, archivos invalidos:
+
+\begin{itemize}
+
+\item octava 10, es decir fuera del rango del 0 al 9.
+\item Repetir 0 veces una lista de compases.
+\item voces:La lista de voces de la melodia
+\item Distinta duracion de dos compases.
+\item Instrumento fuera de rango del 1 al 127.
+\item dos declaraciones distintas de una misma constante.
+\item Sin voz.
+
+\end{itemize}
 
 
 \section{Conclusion}

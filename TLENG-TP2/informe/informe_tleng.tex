@@ -105,44 +105,73 @@ Utilizamos para el trabajo la herramienta ANTLR para generar el parser (y el lex
 
 \section{Grámatica}
 
+Primero mostramos la gramatica del lexer que lee el archivo como secuencia de caracteres y los mapea a una secuencia de simbolos terminales. 
+
+El conjunto de terminales es: \texttt{
+\{NUMERAL, TEMPO, DURACION, NUM, COMPAS, SLASH, CONST, NOMBRE, IGUAL, VOZ, LPAREN, RPAREN, LBRACE, RBRACE, REPETIR, SILENCIO, PUNTILLO, ALTURA, OCTAVA, COMA, PUNTOYCOMA \}
+}\linebreak
+
+
 A continuación definimos la gramática que generamos para sintetizar el lenguaje:
 Las terminales de la gramática son todas las cadenas que están entre comillas simples y los que se derivan a partir de una regla ( de los tokens en mayúscula).
 
 
+\subsection{Lexer}
+A la gramatica del lexer, le dimos reglas para que pueda reconocer los tokens:\\
+TEMPO: 'tempo'; \\
+COMPAS : 'compas'; \\
+CONST: 'const';\\
+IGUAL: '=';\\
+VOZ: 'voz';\\
+LPAREN: '(' ;\\
+RPAREN: ')' ;\\
+LBRACE: '{' ;\\
+RBRACE: '}' ;\\
+NUMERAL:  '\#';\\
+COMA: ',' ;\\
+PUNTOYCOMA: ';';\\
+SLASH: '/';\\
+REPETIR: 'repetir';\\
+SILENCIO: 'silencio';\\
+NOTA:  'nota';\\
+PUNTILLO : '.';\\
+DURACION : ('redonda' $|$'blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa');\\
+ALTURA : ('do'$|$ 're'$|$ 'mi'$|$ 'fa'$|$ 'sol'$|$ 'la'$|$ 'si'$|$'do+'$|$ 're+'$|$ 'mi+'$|$ 'fa+'$|$ 'sol+'$|$ 'la+'$|$ 'si+'$|$\\
+	'do-'$|$ 're-'$|$ 'mi-'$|$ 'fa-'$|$ 'sol-'$|$ 'la-'$|$ 'si-');\\
+NUM: [0-9]+;\\
+NOMBRE: $[$a-zA-Z\_$]$+;\\
+OCTAVA: [1-9];\\
+COMENTARIOS:   $'\backslash\backslash'$ $\sim$[$\backslash r \backslash$ n]*  $\rightarrow$ skip ;\\
+WS : [ $\backslash t \backslash r \backslash n$] + $\rightarrow$ skip ;\\
+
+\newpage
+
+\subsection{Parser}
+A continuación mostramos la gramatica del parser:\\
 
 S $\rightarrow$ tempos elcompas constantes melodia \\
-tempos $\rightarrow$ '\#tempo' DURACION NUM \\
-elcompas $\rightarrow$  '\#compas' NUM '/' NUM \\
+tempos $\rightarrow$ NUMERAL TEMPO DURACION NUM \\
+elcompas $\rightarrow$  NUMERAL COMPAS NUM SLASH NUM \\
 constantes $\rightarrow$  constante* \\
-constante $\rightarrow$  const texto = NUM \\
-melodia $\rightarrow$  ('voz''('NUM')' \{ compases\} )+ $|$ ('voz''('texto')' \{ compases\} )+ \\
+constante $\rightarrow$  CONST NOMBRE IGUAL NUM \\
+melodia $\rightarrow$  (VOZ LPAREN LPAREN NUM RPAREN \{ compases\} )+ \\$|$ (VOZ LPAREN texto RPAREN \{ compases\} )+ \\
 compases $\rightarrow$ compas compases $|$ repeticion compases \\
-repeticion $\rightarrow$ 'repetir''('NUM')' '{'compas'}' \\
-compas $\rightarrow$ ('compas' '{'nota'}')+ $|$ ('compas' '('silencio')')+ \\
-silencio $\rightarrow$ 'silencio''('DURACION PUNTILLO?')' \\
-nota $\rightarrow$ 'nota' '('ALTURA ALTERACION?, octava, DURACION PUNTILLO?')' \\
-octava $\rightarrow$ OCTAVA $|$ TEXTO \\
-ALTERACION $\rightarrow$ '+' $|$'-' ; \\
-PUNTILLO $\rightarrow$ '.'; \\
-DURACION $\rightarrow$ ('blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa'); \\
-ALTURA $\rightarrow$ ('do'$|$'re'$|$'mi'$|$'fa'$|$'sol'$|$'la'$|$'si'); \\
-NUM $\rightarrow$ [0-9]+; \\
-TEXTO $\rightarrow$ $[a-zA-Z\_]$+; \\
-OCTAVA $\rightarrow$ [1-9] $|$ '1'[0-5]; \linebreak
+repeticion $\rightarrow$ REPETIR LPAREN NUM RPAREN LBRACE compas RBRACE \\
+compas $\rightarrow$ (COMPAS LBRACE nota RBRACE)+ $|$ (COMPAS LPAREN silencio RPAREN )+ \\
+silencio $\rightarrow$ SILENCIO LPAREN DURACION PUNTILLO? RPAREN  \\
+nota $\rightarrow$ NOTA LPAREN ALTURA COMA octava, DURACION PUNTILLO? RPAREN  \\
+octava $\rightarrow$ OCTAVA $|$ NOMBRE \\
+
 
 
 
 El símbolo distinguido es S.\linebreak
 
-El conjunto de terminales es: \\
-\texttt{
-\{\#tempo/, \#compas, =, ;, ., -, +, (, ), \{, \}, ,,  const, voz, repetir, nota, silencio, blanca, negra, corchea, semicorchea, fusa, semifusa, do , re , mi , fa, sol, la, si  \}
-}\linebreak
 
 
 El conjunto de no terminales es:\linebreak
 \texttt{
-\{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava, ALTERACION, PUNTILLO, DURACION, ALTURA, NUM, TEXTO, OCTAVA\}  \\
+\{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava\}  \\
 } 
 
 \section{Atributos}
