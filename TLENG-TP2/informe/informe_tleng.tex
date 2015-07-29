@@ -134,26 +134,26 @@ OCTAVA $\rightarrow$ [1-9] $|$ '1'[0-5]; \linebreak
 
 El símbolo distinguido es S.\linebreak
 
+El conjunto de terminales es: \\
+\texttt{
+\{\#tempo/, \#compas, =, ;, ., -, +, (, ), \{, \}, ,,  const, voz, repetir, nota, silencio, blanca, negra, corchea, semicorchea, fusa, semifusa, do , re , mi , fa, sol, la, si  \}
+}\linebreak
+
 
 El conjunto de no terminales es:\linebreak
 \texttt{
-\{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava\}  \\
+\{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava, ALTERACION, PUNTILLO, DURACION, ALTURA, NUM, TEXTO, OCTAVA\}  \\
 } 
 
 \section{Atributos}
 
 Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramatica genere el lenguaje que necesitamos.
-Los atributos tambien los usaremos para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp.
+Los atributos tambien los usaremos para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp. \linebreak
 
-El conjunto de terminales es: \\
-\texttt{
-\{\#tempo/, \#compas, =, ;, ., -, +, (, ), \{, \}, ,,  const, voz, repetir, nota, silencio,  alteracion, puntillo, duracion, Altura, Num, TExto, OCTAVA\}
-}\linebreak
 
-Los atributos sintetizados son:\\
-\texttt{
+Los atributos sintetizados son:\texttt{
 \{partitura, tempo, indicacion, listaCompases, voces, repeticiones, compasObj, silencioObj,notaObj, valor\}
-}\\  
+}\linebreak
 
 
 Los atributos heredados son: 
@@ -165,23 +165,40 @@ Ahora haremos una breve explicacion de cada atributo:
 
 \begin{itemize}
 \item partitura: almacena el tempo, la indicacion y la lista de voces. 
-
 \item tempo: Este atributo guarda la informacion de la duracion de la figura y la cantidad de veces que entra esa figura en un minuto.
-
 \item indicacion: Almacena el numerador y el denominador definidos del compas.
-
 \item voces:La lista de voces de la melodia
-
 \item listaCompases: la lista de los compasObj y las repetcionesObj
-
 \item compasObj: Tiene la lista de notas  de cada compas
 \item repeticiones: almacena la cantidad de repeticiones
 \item notaObj: Almacena la altura,de que octava es, la duracion, la alteracion y si tiene puntillo
 \item silencioObj: Tiene la lista de silencios de cada compas
 \item valor: el valor de la octava 
-\item listacompases: Tiene todos los compases definidos
+\item listaCompases: Tiene todos los compases definidos
 
 \end{itemize}
+
+\section{Modo de uso}
+
+\section{Tests}
+
+Realizamos una serie de tests para verificar que el parser funciona correctamente. Para ello le dimos como entrada al parser, archivos invalidos:
+
+\begin{itemize}
+
+\item octava 10, es decir fuera del rango del 0 al 9.
+\item Repetir 0 veces una lista de compases.
+\item voces:La lista de voces de la melodia
+\item Distinta duracion de dos compases.
+\item Instrumento fuera de rango del 1 al 127.
+\item dos declaraciones distintas de una misma constante.
+\item Sin voz.
+
+\end{itemize}
+
+
+\section{Conclusion}
+
 
 
 
