@@ -222,33 +222,33 @@ import lexerGrammar;
 //Gramatica 
 s returns[Partitura partitura]: tempos elcompas constantes melodia[$elcompas.indicacion] {$partitura = new Partitura($tempos.tempo, $elcompas.indicacion, $melodia.voces);};
 
-tempos returns[Tempo tempo]: '#tempo' DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{validarTempo($tempo)}? ;
+tempos returns[Tempo tempo]: NUMERAL TEMPO DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{validarTempo($tempo)}? ;
 
-elcompas returns [IndicacionCompas indicacion] : '#compas' n1 = NUM'/' n2 = NUM {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
+elcompas returns [IndicacionCompas indicacion] : NUMERAL COMPAS n1 = NUM SLASH n2 = NUM {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
 
 constantes: constante*;
 
-constante: 'const' n1 = NOMBRE'='(NUM {agregarConstante($n1.text, $NUM.int)}?|n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}?)';';
+constante: CONST n1 = NOMBRE IGUAL (NUM {agregarConstante($n1.text, $NUM.int)}?|n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}?) PUNTOYCOMA;
 
 melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrumento]: {$voces = new ArrayList<Voz>();} 
-		('voz''('(NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);})')'
-		'{'compases[$indicacion]'}' {validarAlMenosUnCompas($compases.listaCompases)}? {$voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
+		(VOZ LPAREN (NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);}) RPAREN
+		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? {$voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 
 		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} c1 = compases[$indicacion] { $listaCompases.addAll($c1.listaCompases);} | 
 		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | {$listaCompases = new ArrayList<Compas>();};
 
 repeticion[IndicacionCompas indicacion] returns [List<Compas> listaCompases, int repeticiones]:
-		{$listaCompases = new ArrayList<Compas>();} 'repetir''('NUM {$NUM.int > 0}?')''{'(compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;}'}';
+		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NUM {$NUM.int > 0}? RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;} RBRACE ;
 
 compas[IndicacionCompas indicacion] returns[Compas compasObj]: 
-		{$compasObj = new Compas();}'compas''{'(
+		{$compasObj = new Compas();}COMPAS LBRACE (
 			nota {$compasObj.notas.add($nota.notaObj);} |
 			silencio {$compasObj.notas.add($silencio.silencioObj);}
-		)+'}'{validarDuracion($compasObj.notas, $indicacion)}?;
+		)+RBRACE {validarDuracion($compasObj.notas, $indicacion)}?;
 
-silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencioObj = new Nota(null,null,$DURACION.text,$PUNTILLO != null ? true : false);};
+silencio returns[Nota silencioObj]: SILENCIO LPAREN DURACION PUNTILLO? RPAREN PUNTOYCOMA {$silencioObj = new Nota(null,null,$DURACION.text,$PUNTILLO != null ? true : false);};
 
-nota returns[Nota notaObj] : 'nota''('ALTURA ',' octava ','DURACION PUNTILLO?')'';' {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
+nota returns[Nota notaObj] : NOTA LPAREN ALTURA  COMA  octava  COMA DURACION PUNTILLO? RPAREN PUNTOYCOMA {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
 
 octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {$valor = constantes.get($NOMBRE.text);};

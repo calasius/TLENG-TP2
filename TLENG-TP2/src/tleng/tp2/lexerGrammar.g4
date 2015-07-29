@@ -1,13 +1,39 @@
 lexer grammar lexerGrammar;
 
+TEMPO: 'tempo';
+
+COMPAS : 'compas';
+
+CONST: 'const';
+
+IGUAL: '=';
+
+VOZ: 'voz';
+
+LPAREN: '(' ;
+RPAREN: ')' ;
+
+LBRACE: '{' ;
+RBRACE: '}' ;
+
+NUMERAL:  '#';
+
+COMA: ',' ;
+PUNTOYCOMA: ';';
+SLASH: '/';
+
+
+REPETIR: 'repetir';
+SILENCIO: 'silencio';
+NOTA:  'nota';
+
 PUNTILLO : '.';
 
 DURACION : ('redonda'|'blanca'|'negra'|'corchea'|'semicorchea'|'fusa'|'semifusa');
 
 ALTURA : ('do'| 're'| 'mi'| 'fa'| 'sol'| 'la'| 'si'|
 	'do+'| 're+'| 'mi+'| 'fa+'| 'sol+'| 'la+'| 'si+'|
-	'do-'| 're-'| 'mi-'| 'fa-'| 'sol-'| 'la-'| 'si-'|
-	);
+	'do-'| 're-'| 'mi-'| 'fa-'| 'sol-'| 'la-'| 'si-');
 
 NUM: [0-9]+;
 
