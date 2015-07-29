@@ -505,14 +505,14 @@ public class MusilengParser extends Parser {
 				{
 				setState(51); ((ConstanteContext)_localctx).NUM = match(NUM);
 				setState(52);
-				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0)))) throw new FailedPredicateException(this, "agregarConstante($n1.text, $NUM.int)");
+				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0)))) throw new FailedPredicateException(this, String.format("La constante %s ya esta definida",((ConstanteContext)_localctx).n1.getText()));
 				}
 				break;
 			case NOMBRE:
 				{
 				setState(53); ((ConstanteContext)_localctx).n2 = match(NOMBRE);
 				setState(54);
-				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null)))) throw new FailedPredicateException(this, "agregarConstante($n1.text, $n2.text)");
+				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null)))) throw new FailedPredicateException(this, String.format("La constante %s no esta definida", ((ConstanteContext)_localctx).n2.getText()));
 				}
 				break;
 			default:
@@ -597,7 +597,7 @@ public class MusilengParser extends Parser {
 					{
 					setState(64); ((MelodiaContext)_localctx).NOMBRE = match(NOMBRE);
 					setState(65);
-					if (!(constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)))) throw new FailedPredicateException(this, "constantes.containsKey($NOMBRE.text)");
+					if (!(constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)))) throw new FailedPredicateException(this, String.format("No esta definida la constante %s", ((MelodiaContext)_localctx).NOMBRE.getText()));
 					((MelodiaContext)_localctx).instrumento =  constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null));
 					}
 					break;
@@ -609,7 +609,7 @@ public class MusilengParser extends Parser {
 				setState(71); ((MelodiaContext)_localctx).compases = compases(_localctx.indicacion);
 				setState(72); match(T__6);
 				setState(73);
-				if (!(validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases))) throw new FailedPredicateException(this, "validarAlMenosUnCompas($compases.listaCompases)");
+				if (!(validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases))) throw new FailedPredicateException(this, "Tiene que existir al menos un compas.");
 				_localctx.voces.add(new Voz(_localctx.instrumento, ((MelodiaContext)_localctx).compases.listaCompases));
 				}
 				}
@@ -748,7 +748,7 @@ public class MusilengParser extends Parser {
 			setState(96); match(T__2);
 			setState(97); ((RepeticionContext)_localctx).NUM = match(NUM);
 			setState(98);
-			if (!((((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "$NUM.int > 0");
+			if (!((((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, String.format("La cantidad de repeticiones tiene que ser mayor que cero"));
 			setState(99); match(T__1);
 			setState(100); match(T__8);
 			setState(104); 
@@ -852,7 +852,7 @@ public class MusilengParser extends Parser {
 			} while ( _la==T__14 || _la==T__11 );
 			setState(124); match(T__6);
 			setState(125);
-			if (!(validarDuracion(_localctx.compasObj.notas, _localctx.indicacion))) throw new FailedPredicateException(this, "validarDuracion($compasObj.notas, $indicacion)");
+			if (!(validarDuracion(_localctx.compasObj.notas, _localctx.indicacion))) throw new FailedPredicateException(this, String.format("Faltan notas para completar el compas"));
 			}
 		}
 		catch (RecognitionException re) {
