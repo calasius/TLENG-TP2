@@ -1,0 +1,22 @@
+#tempo negra 110
+#compas 4/4
+const octava = 5;
+const grand_piano = 0;
+voz (grand_piano)
+{
+
+repetir(0)
+{
+compas
+{
+nota(do-, octava, corchea);
+nota(re, octava, corchea);
+nota(mi, octava, corchea);
+nota(fa, octava, corchea);
+nota(sol, octava, corchea);
+nota(la, octava, corchea);
+nota(si, octava, corchea);
+silencio(corchea);
+}
+}
+}

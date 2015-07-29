@@ -118,31 +118,31 @@ Las terminales de la gramática son todas las cadenas que están entre comillas 
 
 \subsection{Lexer}
 A la gramatica del lexer, le dimos reglas para que pueda reconocer los tokens:\\
-TEMPO: 'tempo'; \\
-COMPAS : 'compas'; \\
-CONST: 'const';\\
-IGUAL: '=';\\
-VOZ: 'voz';\\
-LPAREN: '(' ;\\
-RPAREN: ')' ;\\
-LBRACE: '{' ;\\
-RBRACE: '}' ;\\
-NUMERAL:  '\#';\\
-COMA: ',' ;\\
-PUNTOYCOMA: ';';\\
-SLASH: '/';\\
-REPETIR: 'repetir';\\
-SILENCIO: 'silencio';\\
-NOTA:  'nota';\\
-PUNTILLO : '.';\\
-DURACION : ('redonda' $|$'blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa');\\
-ALTURA : ('do'$|$ 're'$|$ 'mi'$|$ 'fa'$|$ 'sol'$|$ 'la'$|$ 'si'$|$'do+'$|$ 're+'$|$ 'mi+'$|$ 'fa+'$|$ 'sol+'$|$ 'la+'$|$ 'si+'$|$\\
+TEMPO$\rightarrow$ 'tempo'; \\
+COMPAS $\rightarrow$ 'compas'; \\
+CONST$\rightarrow$ 'const';\\
+IGUAL$\rightarrow$ '=';\\
+VOZ$\rightarrow$ 'voz';\\
+LPAREN$\rightarrow$ '(' ;\\
+RPAREN$\rightarrow$ ')' ;\\
+LBRACE$\rightarrow$ '{' ;\\
+RBRACE$\rightarrow$ '}' ;\\
+NUMERAL$\rightarrow$  '\#';\\
+COMA$\rightarrow$ ',' ;\\
+PUNTOYCOMA$\rightarrow$ ';';\\
+SLASH$\rightarrow$ '/';\\
+REPETIR$\rightarrow$ 'repetir';\\
+SILENCIO$\rightarrow$ 'silencio';\\
+NOTA$\rightarrow$  'nota';\\
+PUNTILLO $\rightarrow$ '.';\\
+DURACION $\rightarrow$ ('redonda' $|$'blanca'$|$'negra'$|$'corchea'$|$'semicorchea'$|$'fusa'$|$'semifusa');\\
+ALTURA $\rightarrow$ ('do'$|$ 're'$|$ 'mi'$|$ 'fa'$|$ 'sol'$|$ 'la'$|$ 'si'$|$'do+'$|$ 're+'$|$ 'mi+'$|$ 'fa+'$|$ 'sol+'$|$ 'la+'$|$ 'si+'$|$\\
 	'do-'$|$ 're-'$|$ 'mi-'$|$ 'fa-'$|$ 'sol-'$|$ 'la-'$|$ 'si-');\\
-NUM: [0-9]+;\\
-NOMBRE: $[$a-zA-Z\_$]$+;\\
-OCTAVA: [1-9];\\
-COMENTARIOS:   $'\backslash\backslash'$ $\sim$[$\backslash r \backslash$ n]*  $\rightarrow$ skip ;\\
-WS : [ $\backslash t \backslash r \backslash n$] + $\rightarrow$ skip ;\\
+NUM$\rightarrow$ [0-9]+;\\
+NOMBRE$\rightarrow$ $[$a-zA-Z\_$]$+;\\
+OCTAVA$\rightarrow$ [1-9];\\
+COMENTARIOS$\rightarrow$   $'\backslash\backslash'$ $\sim$[$\backslash r \backslash$ n]*  $\rightarrow$ skip ;\\
+WS $\rightarrow$ [ $\backslash t \backslash r \backslash n$] + $\rightarrow$ skip ;\\
 
 \newpage
 
@@ -160,8 +160,9 @@ repeticion $\rightarrow$ REPETIR LPAREN NUM RPAREN LBRACE compas RBRACE \\
 compas $\rightarrow$ (COMPAS LBRACE nota RBRACE)+ $|$ (COMPAS LPAREN silencio RPAREN )+ \\
 silencio $\rightarrow$ SILENCIO LPAREN DURACION PUNTILLO? RPAREN  \\
 nota $\rightarrow$ NOTA LPAREN ALTURA COMA octava, DURACION PUNTILLO? RPAREN  \\
-octava $\rightarrow$ OCTAVA $|$ NOMBRE \\
+octava $\rightarrow$ OCTAVA $|$ NOMBRE \linebreak
 
+Notar que los simbolos en mayusculas son terminales, mientras los que estan en minuscula son no terminales.
 
 
 
@@ -174,7 +175,7 @@ El conjunto de no terminales es:\linebreak
 \{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava\}  \\
 } 
 
-\section{Atributos}
+\subsection{Atributos}
 
 Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramatica genere el lenguaje que necesitamos.
 Los atributos tambien los usaremos para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp. \linebreak
@@ -193,19 +194,21 @@ Los atributos heredados son:
 Ahora haremos una breve explicacion de cada atributo:
 
 \begin{itemize}
-\item partitura: almacena el tempo, la indicacion y la lista de voces. 
-\item tempo: Este atributo guarda la informacion de la duracion de la figura y la cantidad de veces que entra esa figura en un minuto.
-\item indicacion: Almacena el numerador y el denominador definidos del compas.
-\item voces:La lista de voces de la melodia
-\item listaCompases: la lista de los compasObj y las repetcionesObj
-\item compasObj: Tiene la lista de notas  de cada compas
-\item repeticiones: almacena la cantidad de repeticiones
-\item notaObj: Almacena la altura,de que octava es, la duracion, la alteracion y si tiene puntillo
-\item silencioObj: Tiene la lista de silencios de cada compas
-\item valor: el valor de la octava 
-\item listaCompases: Tiene todos los compases definidos
+\item $partitura$: Es el objeto raiz, almacena el tempo, la indicacion y la lista de voces. 
+\item $tempo$: Este atributo guarda la informacion de la duracion de la figura y la cantidad de veces que entra esa figura en un minuto.
+\item $indicacion$: Almacena el numerador y el denominador definidos del compas.
+\item $voces$:La lista de voces de la melodia
+\item $listaCompases$: La lista de los compasObj y las repetcionesObj
+\item $compasObj$: Tiene la lista de notas  de cada compas
+\item $repeticiones$: Almacena la cantidad de repeticiones
+\item $notaObj$: Almacena la altura,de que octava es, la duracion, la alteracion y si tiene puntillo
+\item $silencioObj$: Tiene la lista de silencios de cada compas
+\item $valor$: El valor de la octava 
+\item $listaCompases$: Tiene todos los compases definidos
 
 \end{itemize}
+
+\newpage
 
 \section{Modo de uso}
 
