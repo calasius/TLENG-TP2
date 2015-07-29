@@ -162,7 +162,9 @@ silencio $\rightarrow$ SILENCIO LPAREN DURACION PUNTILLO? RPAREN  \\
 nota $\rightarrow$ NOTA LPAREN ALTURA COMA octava, DURACION PUNTILLO? RPAREN  \\
 octava $\rightarrow$ OCTAVA $|$ NOMBRE \linebreak
 
-Notar que los simbolos en mayusculas son terminales, mientras los que estan en minuscula son no terminales.
+Notar que los símbolos en mayúsculas son terminales, mientras los que estan en minúscula son no terminales.\\
+Por decision de diseño, el lenguaje no admite una repeticion anidada dentro de otra ya que 
+creemos que no es necesario.\\
 
 
 
@@ -173,12 +175,14 @@ El símbolo distinguido es S.\linebreak
 El conjunto de no terminales es:\linebreak
 \texttt{
 \{S, tempos, elcompas,contantes, contante, melodia, compases, repeticion, compas, silencio,nota, octava\}  \\
-} 
+}
+
+
 
 \subsection{Atributos}
 
-Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramatica genere el lenguaje que necesitamos.
-Los atributos tambien los usaremos para realizar la traduccion al lenguaje intermedio para que sea legible por el programa midcomp. \linebreak
+Asignamos atributos para verificar las restricciones que tenemos que hacer de modo tal que la gramática genere el lenguaje que necesitamos.
+Los atributos también los usaremos para realizar la traducción al lenguaje intermedio para que sea legible por el programa midcomp. \linebreak
 
 
 Los atributos sintetizados son:\texttt{
@@ -191,28 +195,32 @@ Los atributos heredados son:
 \{indicacion\}
 }\\  
 
-Ahora haremos una breve explicacion de cada atributo:
+Ahora haremos una breve explicación de cada atributo:
 
 \begin{itemize}
-\item $partitura$: Es el objeto raiz, almacena el tempo, la indicacion y la lista de voces. 
-\item $tempo$: Este atributo guarda la informacion de la duracion de la figura y la cantidad de veces que entra esa figura en un minuto.
-\item $indicacion$: Almacena el numerador y el denominador definidos del compas.
-\item $voces$:La lista de voces de la melodia
-\item $listaCompases$: La lista de los compasObj y las repetcionesObj
-\item $compasObj$: Tiene la lista de notas  de cada compas
-\item $repeticiones$: Almacena la cantidad de repeticiones
-\item $notaObj$: Almacena la altura,de que octava es, la duracion, la alteracion y si tiene puntillo
-\item $silencioObj$: Tiene la lista de silencios de cada compas
-\item $valor$: El valor de la octava 
-\item $listaCompases$: Tiene todos los compases definidos
+\item $partitura$: Es el objeto raiz, almacena el tempo, la indicación y la lista de voces. 
+\item $tempo$: Este atributo guarda la información de la duración de la figura y la cantidad de veces que entra esa figura en un minuto.
+\item $indicacion$: Almacena el numerador y el denominador definidos del compás.
+\item $voces$:La lista de voces de la melodía.
+\item $listaCompases$: La lista de los compasObj y las repetcionesObj.
+\item $compasObj$: Tiene la lista de notas  de cada compas.
+\item $repeticiones$: Almacena la cantidad de repeticiones.
+\item $notaObj$: Almacena la altura,de que octava es, la duración, la alteración y si tiene puntillo.
+\item $silencioObj$: Tiene la lista de silencios de cada compas.
+\item $valor$: El valor de la octava .
+\item $listaCompases$: Tiene todos los compases definidos.
 
 \end{itemize}
 
 \newpage
 
-\section{Modo de uso}
+\section{Midicomp}
+
+Finalmente, realizamos la traducción en un archivo llamado $midicomp.java$, que calcula los tiempos a partir del tempo y vamos 
+prendiendo y apagando los canales por cada nota o silencio que hay en la melodía.
 
 \section{Tests}
+\subsection{Test Inválidos}
 
 Realizamos una serie de tests para verificar que el parser funciona correctamente. Para ello le dimos como entrada al parser, archivos invalidos:
 
@@ -228,9 +236,16 @@ Realizamos una serie de tests para verificar que el parser funciona correctament
 
 \end{itemize}
 
+\subsection{Test Válidos}
 
-\section{Conclusion}
+Sobre los test válidos probamos el archivo de ejemplo del enunciado.\\
+Otro test vimos que funcionaba correctamente el comando repetir y por último uno que utilizaba dos voces.
 
+\section{Conclusión}
+Con este trabajo pudimos llevar a la practica y automatizar un parser y un lexer para un lenguaje dado, utilizando la herramienta $ANTLR$.
+Así pudimos entender un poco mejor la diferencia entre los tokens que tiene que identificar el lexer y las sentencias de no terminales que se
+pueden formar con esos tokens a partir de la gramatica.
+A continuación dejamos el código.
 
 \input{ApendiceCodigo.tex}
 

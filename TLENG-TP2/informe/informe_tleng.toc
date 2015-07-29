@@ -4,10 +4,12 @@
 \contentsline {subsection}{\numberline {2.1}Lexer}{2}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Parser}{3}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Atributos}{3}{subsection.2.3}
-\contentsline {section}{\numberline {3}Modo de uso}{4}{section.3}
+\contentsline {section}{\numberline {3}Midicomp}{4}{section.3}
 \contentsline {section}{\numberline {4}Tests}{4}{section.4}
-\contentsline {section}{\numberline {5}Conclusion}{4}{section.5}
-\contentsline {section}{\numberline {6}Apendice}{4}{section.6}
-\contentsline {subsection}{\numberline {6.1}Codigo Lexer}{4}{subsection.6.1}
-\contentsline {subsection}{\numberline {6.2}Codigo Parser}{4}{subsection.6.2}
-\contentsline {subsection}{\numberline {6.3}Codigo Midcomp}{8}{subsection.6.3}
+\contentsline {subsection}{\numberline {4.1}Test Inv\IeC {\'a}lidos}{4}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Test V\IeC {\'a}lidos}{4}{subsection.4.2}
+\contentsline {section}{\numberline {5}Conclusi\IeC {\'o}n}{4}{section.5}
+\contentsline {section}{\numberline {6}Ap\IeC {\'e}ndice}{4}{section.6}
+\contentsline {subsection}{\numberline {6.1}C\IeC {\'o}digo Lexer}{4}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}C\IeC {\'o}digo Parser}{5}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Codigo Midcomp}{9}{subsection.6.3}

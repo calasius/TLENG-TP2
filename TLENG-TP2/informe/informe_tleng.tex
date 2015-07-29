@@ -214,7 +214,12 @@ Ahora haremos una breve explicación de cada atributo:
 
 \newpage
 
-\section{Modo de uso}
+\section{Midicomp}
+
+Finalmente, realizamos la traducción en un archivo llamado $midicomp.java$, que calcula los tiempos a partir del tempo y vamos 
+prendiendo y apagando los canales por cada nota o silencio que hay en la melodía.
+Luego además del encabezado inicial que indica la cantidad de tracks y cantidad de ticks por negra, realizamos la traducción para todos los compases
+de cada voz que hay en el archivo de entrada.
 
 \section{Tests}
 \subsection{Test Inválidos}
@@ -235,8 +240,8 @@ Realizamos una serie de tests para verificar que el parser funciona correctament
 
 \subsection{Test Válidos}
 
-Sobre los test válidos probamos el archivo de ejemplo del enunciado.
-Un archivo que usaba el comando repetir y uno que utilizaba dos voces.
+Sobre los test válidos probamos el archivo de ejemplo del enunciado.\\
+Otro test vimos que funcionaba correctamente el comando repetir y por último uno que utilizaba dos voces.
 
 \section{Conclusión}
 Con este trabajo pudimos llevar a la practica y automatizar un parser y un lexer para un lenguaje dado, utilizando la herramienta $ANTLR$.
