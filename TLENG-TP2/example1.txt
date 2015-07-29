@@ -1,7 +1,7 @@
 #tempo redonda 60
 #compas 2/2
 
-const octava = 5;
+const octava = 10;
 const grand_piano = 0;
 
 
@@ -15,7 +15,7 @@ nota(re, octava, blanca);
 compas
 {
 nota(mi, octava, blanca);
-
+nota(fa, octava, blanca);
 }
 compas
 {

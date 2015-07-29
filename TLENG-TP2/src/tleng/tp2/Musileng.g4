@@ -251,4 +251,4 @@ silencio returns[Nota silencioObj]: SILENCIO LPAREN DURACION PUNTILLO? RPAREN PU
 
 nota returns[Nota notaObj] : NOTA LPAREN ALTURA  COMA  octava  COMA DURACION PUNTILLO? RPAREN PUNTOYCOMA {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
 
-octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {$valor = constantes.get($NOMBRE.text);};
+octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {constantes.containsKey($NOMBRE.text) && constantes.get($NOMBRE.text) <= 9}? {$valor = constantes.get($NOMBRE.text);};
