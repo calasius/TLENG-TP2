@@ -2,7 +2,7 @@ grammar Musileng;
 
 import lexerGrammar;
 
-@header {
+@parser::header {
 	import java.util.HashMap;
 	import java.util.Map;
 	import java.util.List;
@@ -12,6 +12,8 @@ import lexerGrammar;
 @parser::members {
 	private Map<String,Integer> constantes = new HashMap<String,Integer>();
 	
+	public static final int CLICKS_POR_PULSO = 384;
+	
 	private boolean agregarConstante(String nombre, String valor) {
 		if (constantes.containsKey(valor)) {
 			constantes.put(nombre,constantes.get(valor));
@@ -19,6 +21,12 @@ import lexerGrammar;
 		} else {
 			return false;
 		}
+	}
+	
+	public static int clicksPorFigura(String altura, IndicacionCompas indicacion) {
+		NotaEnum figura = NotaEnum.valueOf(altura);
+		int clicksPorRedonda = CLICKS_POR_PULSO * indicacion.tipoNota;
+		return clicksPorRedonda / Double.valueOf(4 / figura.getDuracion()).intValue();
 	}
 	
 	private boolean agregarConstante(String nombre, Integer valor) {
@@ -78,7 +86,7 @@ import lexerGrammar;
 		public String alteracion;
 		public Integer octava;
 		boolean tienePuntillo;
-		public Nota(String altura, Integer octava, String duracion, String alteracion, boolean tienePuntillo) {
+		public Nota(String altura, Integer octava, String duracion, boolean tienePuntillo) {
 			this.altura = altura;
 			this.octava = octava;
 			this.duracion = duracion;
@@ -91,6 +99,14 @@ import lexerGrammar;
 			return duracionNota + (this.tienePuntillo? duracionNota /2 : 0.0);
 		}
 		
+		public boolean isSilencio() {
+			return altura == null;
+		}
+		
+		public String notacionAmericana() {
+			return NotacionAmericana.notacionAmericana(this.altura)+octava;
+		}
+		
 		public String toString() {
 			if (altura != null) {
 				return String.format("Nota(%s,%s,%s,%s,%s)", altura, octava, duracion, alteracion, tienePuntillo);			
@@ -98,10 +114,11 @@ import lexerGrammar;
 				return String.format("Silencio(%s, %s)", this.duracion, this.tienePuntillo);
 			}
 		}
+		
 	}
 	
 	public enum NotaEnum {
-		redonda(4.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
+		redonda(1.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
 		
 		private Double duracion;
 		
@@ -111,6 +128,34 @@ import lexerGrammar;
 		
 		public Double getDuracion() {
 			return this.duracion;
+		}
+	}
+	
+	public static class NotacionAmericana {
+		private static Map<String,String> notacionAmericana = new HashMap<String,String>();
+		static {
+			notacionAmericana.put("do" , "c");
+			notacionAmericana.put("re" , "d");
+			notacionAmericana.put("mi" , "e");
+			notacionAmericana.put("fa" , "f");
+			notacionAmericana.put("sol" , "g");
+			notacionAmericana.put("la" , "a");
+			notacionAmericana.put("si" , "b");
+			notacionAmericana.put("do+" , "c+");
+			notacionAmericana.put("do" , "c");
+			notacionAmericana.put("re+" , "d+");
+			notacionAmericana.put("fa+" , "f+");
+			notacionAmericana.put("sol+" , "g+");
+			notacionAmericana.put("la+" , "a+");
+			notacionAmericana.put("re-" , "d-");
+			notacionAmericana.put("mi-" , "e-");
+			notacionAmericana.put("sol-" , "g-");
+			notacionAmericana.put("la-" , "a-");
+			notacionAmericana.put("si-" , "b-");				
+		}
+		
+		public static String notacionAmericana(String altura) {
+			return notacionAmericana.get(altura);
 		}
 	}
 	
@@ -200,8 +245,8 @@ compas[IndicacionCompas indicacion] returns[Compas compasObj]:
 			silencio {$compasObj.notas.add($silencio.silencioObj);}
 		)+'}'{validarDuracion($compasObj.notas, $indicacion)}?;
 
-silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencioObj = new Nota(null,null,$DURACION.text,null,$PUNTILLO != null ? true : false);};
+silencio returns[Nota silencioObj]: 'silencio''('DURACION PUNTILLO?')'';' {$silencioObj = new Nota(null,null,$DURACION.text,$PUNTILLO != null ? true : false);};
 
-nota returns[Nota notaObj] : 'nota''('ALTURA ALTERACION? ',' octava ','DURACION PUNTILLO?')'';' {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $ALTERACION != null ? $ALTERACION.text : null, $PUNTILLO != null);};
+nota returns[Nota notaObj] : 'nota''('ALTURA ',' octava ','DURACION PUNTILLO?')'';' {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
 
 octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {$valor = constantes.get($NOMBRE.text);};

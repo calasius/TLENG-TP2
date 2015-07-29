@@ -1,5 +1,5 @@
-package tleng.tp2;
 // Generated from Musileng.g4 by ANTLR 4.4
+package tleng.tp2;
 
 	import java.util.HashMap;
 	import java.util.Map;

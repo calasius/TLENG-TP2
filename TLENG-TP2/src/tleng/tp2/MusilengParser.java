@@ -1,5 +1,5 @@
-package tleng.tp2;
 // Generated from Musileng.g4 by ANTLR 4.4
+package tleng.tp2;
 
 	import java.util.HashMap;
 	import java.util.Map;
@@ -25,13 +25,12 @@ public class MusilengParser extends Parser {
 	public static final int
 		T__15=1, T__14=2, T__13=3, T__12=4, T__11=5, T__10=6, T__9=7, T__8=8, 
 		T__7=9, T__6=10, T__5=11, T__4=12, T__3=13, T__2=14, T__1=15, T__0=16, 
-		ALTERACION=17, PUNTILLO=18, DURACION=19, ALTURA=20, NUM=21, NOMBRE=22, 
-		OCTAVA=23, WS=24;
+		PUNTILLO=17, DURACION=18, ALTURA=19, NUM=20, NOMBRE=21, OCTAVA=22, WS=23, 
+		COMENTARIOS=24;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'/'", "'nota'", "'const'", "'#compas'", "'silencio'", "'repetir'", 
 		"'#tempo'", "'{'", "';'", "'}'", "'voz'", "'='", "'compas'", "'('", "')'", 
-		"','", "ALTERACION", "'.'", "DURACION", "ALTURA", "NUM", "NOMBRE", "OCTAVA", 
-		"WS"
+		"','", "'.'", "DURACION", "ALTURA", "NUM", "NOMBRE", "OCTAVA", "WS", "COMENTARIOS"
 	};
 	public static final int
 		RULE_s = 0, RULE_tempos = 1, RULE_elcompas = 2, RULE_constantes = 3, RULE_constante = 4, 
@@ -60,6 +59,8 @@ public class MusilengParser extends Parser {
 
 		private Map<String,Integer> constantes = new HashMap<String,Integer>();
 		
+		public static final int CLICKS_POR_PULSO = 384;
+		
 		private boolean agregarConstante(String nombre, String valor) {
 			if (constantes.containsKey(valor)) {
 				constantes.put(nombre,constantes.get(valor));
@@ -67,6 +68,12 @@ public class MusilengParser extends Parser {
 			} else {
 				return false;
 			}
+		}
+		
+		public static int clicksPorFigura(String altura, IndicacionCompas indicacion) {
+			NotaEnum figura = NotaEnum.valueOf(altura);
+			int clicksPorRedonda = CLICKS_POR_PULSO * indicacion.tipoNota;
+			return clicksPorRedonda / Double.valueOf(4 / figura.getDuracion()).intValue();
 		}
 		
 		private boolean agregarConstante(String nombre, Integer valor) {
@@ -126,7 +133,7 @@ public class MusilengParser extends Parser {
 			public String alteracion;
 			public Integer octava;
 			boolean tienePuntillo;
-			public Nota(String altura, Integer octava, String duracion, String alteracion, boolean tienePuntillo) {
+			public Nota(String altura, Integer octava, String duracion, boolean tienePuntillo) {
 				this.altura = altura;
 				this.octava = octava;
 				this.duracion = duracion;
@@ -139,6 +146,14 @@ public class MusilengParser extends Parser {
 				return duracionNota + (this.tienePuntillo? duracionNota /2 : 0.0);
 			}
 			
+			public boolean isSilencio() {
+				return altura == null;
+			}
+			
+			public String notacionAmericana() {
+				return NotacionAmericana.notacionAmericana(this.altura)+octava;
+			}
+			
 			public String toString() {
 				if (altura != null) {
 					return String.format("Nota(%s,%s,%s,%s,%s)", altura, octava, duracion, alteracion, tienePuntillo);			
@@ -146,10 +161,11 @@ public class MusilengParser extends Parser {
 					return String.format("Silencio(%s, %s)", this.duracion, this.tienePuntillo);
 				}
 			}
+			
 		}
 		
 		public enum NotaEnum {
-			redonda(4.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
+			redonda(1.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
 			
 			private Double duracion;
 			
@@ -159,6 +175,34 @@ public class MusilengParser extends Parser {
 			
 			public Double getDuracion() {
 				return this.duracion;
+			}
+		}
+		
+		public static class NotacionAmericana {
+			private static Map<String,String> notacionAmericana = new HashMap<String,String>();
+			static {
+				notacionAmericana.put("do" , "c");
+				notacionAmericana.put("re" , "d");
+				notacionAmericana.put("mi" , "e");
+				notacionAmericana.put("fa" , "f");
+				notacionAmericana.put("sol" , "g");
+				notacionAmericana.put("la" , "a");
+				notacionAmericana.put("si" , "b");
+				notacionAmericana.put("do+" , "c+");
+				notacionAmericana.put("do" , "c");
+				notacionAmericana.put("re+" , "d+");
+				notacionAmericana.put("fa+" , "f+");
+				notacionAmericana.put("sol+" , "g+");
+				notacionAmericana.put("la+" , "a+");
+				notacionAmericana.put("re-" , "d-");
+				notacionAmericana.put("mi-" , "e-");
+				notacionAmericana.put("sol-" , "g-");
+				notacionAmericana.put("la-" , "a-");
+				notacionAmericana.put("si-" , "b-");				
+			}
+			
+			public static String notacionAmericana(String altura) {
+				return notacionAmericana.get(altura);
 			}
 		}
 		
@@ -275,6 +319,7 @@ public class MusilengParser extends Parser {
 		finally {
 			exitRule();
 		}
+		System.out.println(((SContext)_localctx).partitura);
 		return _localctx;
 	}
 
@@ -858,7 +903,7 @@ public class MusilengParser extends Parser {
 
 			setState(130); match(T__1);
 			setState(131); match(T__7);
-			((SilencioContext)_localctx).silencioObj =  new Nota(null,null,(((SilencioContext)_localctx).DURACION!=null?((SilencioContext)_localctx).DURACION.getText():null),null,((SilencioContext)_localctx).PUNTILLO != null ? true : false);
+			((SilencioContext)_localctx).silencioObj =  new Nota(null,null,(((SilencioContext)_localctx).DURACION!=null?((SilencioContext)_localctx).DURACION.getText():null),((SilencioContext)_localctx).PUNTILLO != null ? true : false);
 			}
 		}
 		catch (RecognitionException re) {
@@ -875,7 +920,6 @@ public class MusilengParser extends Parser {
 	public static class NotaContext extends ParserRuleContext {
 		public Nota notaObj;
 		public Token ALTURA;
-		public Token ALTERACION;
 		public OctavaContext octava;
 		public Token DURACION;
 		public Token PUNTILLO;
@@ -885,7 +929,6 @@ public class MusilengParser extends Parser {
 		}
 		public TerminalNode ALTURA() { return getToken(MusilengParser.ALTURA, 0); }
 		public TerminalNode DURACION() { return getToken(MusilengParser.DURACION, 0); }
-		public TerminalNode ALTERACION() { return getToken(MusilengParser.ALTERACION, 0); }
 		public NotaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -910,29 +953,21 @@ public class MusilengParser extends Parser {
 			setState(134); match(T__14);
 			setState(135); match(T__2);
 			setState(136); ((NotaContext)_localctx).ALTURA = match(ALTURA);
-			setState(138);
-			_la = _input.LA(1);
-			if (_la==ALTERACION) {
-				{
-				setState(137); ((NotaContext)_localctx).ALTERACION = match(ALTERACION);
-				}
-			}
-
-			setState(140); match(T__0);
-			setState(141); ((NotaContext)_localctx).octava = octava();
-			setState(142); match(T__0);
-			setState(143); ((NotaContext)_localctx).DURACION = match(DURACION);
-			setState(145);
+			setState(137); match(T__0);
+			setState(138); ((NotaContext)_localctx).octava = octava();
+			setState(139); match(T__0);
+			setState(140); ((NotaContext)_localctx).DURACION = match(DURACION);
+			setState(142);
 			_la = _input.LA(1);
 			if (_la==PUNTILLO) {
 				{
-				setState(144); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
+				setState(141); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
 				}
 			}
 
-			setState(147); match(T__1);
-			setState(148); match(T__7);
-			((NotaContext)_localctx).notaObj =  new Nota((((NotaContext)_localctx).ALTURA!=null?((NotaContext)_localctx).ALTURA.getText():null),((NotaContext)_localctx).octava.valor,(((NotaContext)_localctx).DURACION!=null?((NotaContext)_localctx).DURACION.getText():null), ((NotaContext)_localctx).ALTERACION != null ? (((NotaContext)_localctx).ALTERACION!=null?((NotaContext)_localctx).ALTERACION.getText():null) : null, ((NotaContext)_localctx).PUNTILLO != null);
+			setState(144); match(T__1);
+			setState(145); match(T__7);
+			((NotaContext)_localctx).notaObj =  new Nota((((NotaContext)_localctx).ALTURA!=null?((NotaContext)_localctx).ALTURA.getText():null),((NotaContext)_localctx).octava.valor,(((NotaContext)_localctx).DURACION!=null?((NotaContext)_localctx).DURACION.getText():null), ((NotaContext)_localctx).PUNTILLO != null);
 			}
 		}
 		catch (RecognitionException re) {
@@ -970,19 +1005,19 @@ public class MusilengParser extends Parser {
 		OctavaContext _localctx = new OctavaContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_octava);
 		try {
-			setState(155);
+			setState(152);
 			switch (_input.LA(1)) {
 			case OCTAVA:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(151); ((OctavaContext)_localctx).OCTAVA = match(OCTAVA);
+				setState(148); ((OctavaContext)_localctx).OCTAVA = match(OCTAVA);
 				((OctavaContext)_localctx).valor =  (((OctavaContext)_localctx).OCTAVA!=null?Integer.valueOf(((OctavaContext)_localctx).OCTAVA.getText()):0);
 				}
 				break;
 			case NOMBRE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(153); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
+				setState(150); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
 				((OctavaContext)_localctx).valor =  constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null));
 				}
 				break;
@@ -1045,7 +1080,7 @@ public class MusilengParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\u00a0\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\u009d\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\4\3\4\3\4\3\4\3\4\3\4\3\5\7\5.\n\5\f\5\16\5\61\13\5\3\6\3\6\3\6\3\6"+
@@ -1054,39 +1089,38 @@ public class MusilengParser extends Parser {
 		"\b\3\b\3\b\3\b\3\b\3\b\5\b^\n\b\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\6\th\n"+
 		"\t\r\t\16\ti\3\t\3\t\3\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\6\nx\n\n"+
 		"\r\n\16\ny\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5\13\u0083\n\13\3\13\3\13\3"+
-		"\13\3\13\3\f\3\f\3\f\3\f\5\f\u008d\n\f\3\f\3\f\3\f\3\f\3\f\5\f\u0094\n"+
-		"\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\5\r\u009e\n\r\3\r\2\2\16\2\4\6\b\n"+
-		"\f\16\20\22\24\26\30\2\2\u00a0\2\32\3\2\2\2\4 \3\2\2\2\6&\3\2\2\2\b/\3"+
-		"\2\2\2\n\62\3\2\2\2\f=\3\2\2\2\16]\3\2\2\2\20_\3\2\2\2\22n\3\2\2\2\24"+
-		"~\3\2\2\2\26\u0088\3\2\2\2\30\u009d\3\2\2\2\32\33\5\4\3\2\33\34\5\6\4"+
-		"\2\34\35\5\b\5\2\35\36\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7\t\2\2!\""+
-		"\7\25\2\2\"#\7\27\2\2#$\b\3\1\2$%\6\3\2\3%\5\3\2\2\2&\'\7\6\2\2\'(\7\27"+
-		"\2\2()\7\3\2\2)*\7\27\2\2*+\b\4\1\2+\7\3\2\2\2,.\5\n\6\2-,\3\2\2\2.\61"+
-		"\3\2\2\2/-\3\2\2\2/\60\3\2\2\2\60\t\3\2\2\2\61/\3\2\2\2\62\63\7\5\2\2"+
-		"\63\64\7\30\2\2\649\7\16\2\2\65\66\7\27\2\2\66:\6\6\3\3\678\7\30\2\28"+
-		":\6\6\4\39\65\3\2\2\29\67\3\2\2\2:;\3\2\2\2;<\7\13\2\2<\13\3\2\2\2=N\b"+
-		"\7\1\2>?\7\r\2\2?E\7\20\2\2@A\7\27\2\2AF\b\7\1\2BC\7\30\2\2CD\6\7\5\3"+
-		"DF\b\7\1\2E@\3\2\2\2EB\3\2\2\2FG\3\2\2\2GH\7\21\2\2HI\7\n\2\2IJ\5\16\b"+
-		"\2JK\7\f\2\2KL\6\7\6\3LM\b\7\1\2MO\3\2\2\2N>\3\2\2\2OP\3\2\2\2PN\3\2\2"+
-		"\2PQ\3\2\2\2Q\r\3\2\2\2RS\b\b\1\2ST\5\22\n\2TU\b\b\1\2UV\5\16\b\2V^\3"+
-		"\2\2\2WX\b\b\1\2XY\5\20\t\2YZ\b\b\1\2Z[\5\16\b\2[^\3\2\2\2\\^\3\2\2\2"+
-		"]R\3\2\2\2]W\3\2\2\2]\\\3\2\2\2^\17\3\2\2\2_`\b\t\1\2`a\7\b\2\2ab\7\20"+
-		"\2\2bc\7\27\2\2cd\6\t\7\3de\7\21\2\2eg\7\n\2\2fh\5\22\n\2gf\3\2\2\2hi"+
-		"\3\2\2\2ig\3\2\2\2ij\3\2\2\2jk\3\2\2\2kl\b\t\1\2lm\7\f\2\2m\21\3\2\2\2"+
-		"no\b\n\1\2op\7\17\2\2pw\7\n\2\2qr\5\26\f\2rs\b\n\1\2sx\3\2\2\2tu\5\24"+
-		"\13\2uv\b\n\1\2vx\3\2\2\2wq\3\2\2\2wt\3\2\2\2xy\3\2\2\2yw\3\2\2\2yz\3"+
-		"\2\2\2z{\3\2\2\2{|\7\f\2\2|}\6\n\b\3}\23\3\2\2\2~\177\7\7\2\2\177\u0080"+
-		"\7\20\2\2\u0080\u0082\7\25\2\2\u0081\u0083\7\24\2\2\u0082\u0081\3\2\2"+
-		"\2\u0082\u0083\3\2\2\2\u0083\u0084\3\2\2\2\u0084\u0085\7\21\2\2\u0085"+
-		"\u0086\7\13\2\2\u0086\u0087\b\13\1\2\u0087\25\3\2\2\2\u0088\u0089\7\4"+
-		"\2\2\u0089\u008a\7\20\2\2\u008a\u008c\7\26\2\2\u008b\u008d\7\23\2\2\u008c"+
-		"\u008b\3\2\2\2\u008c\u008d\3\2\2\2\u008d\u008e\3\2\2\2\u008e\u008f\7\22"+
-		"\2\2\u008f\u0090\5\30\r\2\u0090\u0091\7\22\2\2\u0091\u0093\7\25\2\2\u0092"+
-		"\u0094\7\24\2\2\u0093\u0092\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\3"+
-		"\2\2\2\u0095\u0096\7\21\2\2\u0096\u0097\7\13\2\2\u0097\u0098\b\f\1\2\u0098"+
-		"\27\3\2\2\2\u0099\u009a\7\31\2\2\u009a\u009e\b\r\1\2\u009b\u009c\7\30"+
-		"\2\2\u009c\u009e\b\r\1\2\u009d\u0099\3\2\2\2\u009d\u009b\3\2\2\2\u009e"+
-		"\31\3\2\2\2\16/9EP]iwy\u0082\u008c\u0093\u009d";
+		"\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0091\n\f\3\f\3\f\3\f\3\f"+
+		"\3\r\3\r\3\r\3\r\5\r\u009b\n\r\3\r\2\2\16\2\4\6\b\n\f\16\20\22\24\26\30"+
+		"\2\2\u009c\2\32\3\2\2\2\4 \3\2\2\2\6&\3\2\2\2\b/\3\2\2\2\n\62\3\2\2\2"+
+		"\f=\3\2\2\2\16]\3\2\2\2\20_\3\2\2\2\22n\3\2\2\2\24~\3\2\2\2\26\u0088\3"+
+		"\2\2\2\30\u009a\3\2\2\2\32\33\5\4\3\2\33\34\5\6\4\2\34\35\5\b\5\2\35\36"+
+		"\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7\t\2\2!\"\7\24\2\2\"#\7\26\2\2"+
+		"#$\b\3\1\2$%\6\3\2\3%\5\3\2\2\2&\'\7\6\2\2\'(\7\26\2\2()\7\3\2\2)*\7\26"+
+		"\2\2*+\b\4\1\2+\7\3\2\2\2,.\5\n\6\2-,\3\2\2\2.\61\3\2\2\2/-\3\2\2\2/\60"+
+		"\3\2\2\2\60\t\3\2\2\2\61/\3\2\2\2\62\63\7\5\2\2\63\64\7\27\2\2\649\7\16"+
+		"\2\2\65\66\7\26\2\2\66:\6\6\3\3\678\7\27\2\28:\6\6\4\39\65\3\2\2\29\67"+
+		"\3\2\2\2:;\3\2\2\2;<\7\13\2\2<\13\3\2\2\2=N\b\7\1\2>?\7\r\2\2?E\7\20\2"+
+		"\2@A\7\26\2\2AF\b\7\1\2BC\7\27\2\2CD\6\7\5\3DF\b\7\1\2E@\3\2\2\2EB\3\2"+
+		"\2\2FG\3\2\2\2GH\7\21\2\2HI\7\n\2\2IJ\5\16\b\2JK\7\f\2\2KL\6\7\6\3LM\b"+
+		"\7\1\2MO\3\2\2\2N>\3\2\2\2OP\3\2\2\2PN\3\2\2\2PQ\3\2\2\2Q\r\3\2\2\2RS"+
+		"\b\b\1\2ST\5\22\n\2TU\b\b\1\2UV\5\16\b\2V^\3\2\2\2WX\b\b\1\2XY\5\20\t"+
+		"\2YZ\b\b\1\2Z[\5\16\b\2[^\3\2\2\2\\^\3\2\2\2]R\3\2\2\2]W\3\2\2\2]\\\3"+
+		"\2\2\2^\17\3\2\2\2_`\b\t\1\2`a\7\b\2\2ab\7\20\2\2bc\7\26\2\2cd\6\t\7\3"+
+		"de\7\21\2\2eg\7\n\2\2fh\5\22\n\2gf\3\2\2\2hi\3\2\2\2ig\3\2\2\2ij\3\2\2"+
+		"\2jk\3\2\2\2kl\b\t\1\2lm\7\f\2\2m\21\3\2\2\2no\b\n\1\2op\7\17\2\2pw\7"+
+		"\n\2\2qr\5\26\f\2rs\b\n\1\2sx\3\2\2\2tu\5\24\13\2uv\b\n\1\2vx\3\2\2\2"+
+		"wq\3\2\2\2wt\3\2\2\2xy\3\2\2\2yw\3\2\2\2yz\3\2\2\2z{\3\2\2\2{|\7\f\2\2"+
+		"|}\6\n\b\3}\23\3\2\2\2~\177\7\7\2\2\177\u0080\7\20\2\2\u0080\u0082\7\24"+
+		"\2\2\u0081\u0083\7\23\2\2\u0082\u0081\3\2\2\2\u0082\u0083\3\2\2\2\u0083"+
+		"\u0084\3\2\2\2\u0084\u0085\7\21\2\2\u0085\u0086\7\13\2\2\u0086\u0087\b"+
+		"\13\1\2\u0087\25\3\2\2\2\u0088\u0089\7\4\2\2\u0089\u008a\7\20\2\2\u008a"+
+		"\u008b\7\25\2\2\u008b\u008c\7\22\2\2\u008c\u008d\5\30\r\2\u008d\u008e"+
+		"\7\22\2\2\u008e\u0090\7\24\2\2\u008f\u0091\7\23\2\2\u0090\u008f\3\2\2"+
+		"\2\u0090\u0091\3\2\2\2\u0091\u0092\3\2\2\2\u0092\u0093\7\21\2\2\u0093"+
+		"\u0094\7\13\2\2\u0094\u0095\b\f\1\2\u0095\27\3\2\2\2\u0096\u0097\7\30"+
+		"\2\2\u0097\u009b\b\r\1\2\u0098\u0099\7\27\2\2\u0099\u009b\b\r\1\2\u009a"+
+		"\u0096\3\2\2\2\u009a\u0098\3\2\2\2\u009b\31\3\2\2\2\r/9EP]iwy\u0082\u0090"+
+		"\u009a";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
