@@ -15,6 +15,36 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface MusilengListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link MusilengParser#repeticion}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeticion(@NotNull MusilengParser.RepeticionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MusilengParser#repeticion}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeticion(@NotNull MusilengParser.RepeticionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MusilengParser#silencio}.
+	 * @param ctx the parse tree
+	 */
+	void enterSilencio(@NotNull MusilengParser.SilencioContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MusilengParser#silencio}.
+	 * @param ctx the parse tree
+	 */
+	void exitSilencio(@NotNull MusilengParser.SilencioContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MusilengParser#nota}.
+	 * @param ctx the parse tree
+	 */
+	void enterNota(@NotNull MusilengParser.NotaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MusilengParser#nota}.
+	 * @param ctx the parse tree
+	 */
+	void exitNota(@NotNull MusilengParser.NotaContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MusilengParser#s}.
 	 * @param ctx the parse tree
 	 */
@@ -24,6 +54,16 @@ public interface MusilengListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitS(@NotNull MusilengParser.SContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link MusilengParser#elcompas}.
+	 * @param ctx the parse tree
+	 */
+	void enterElcompas(@NotNull MusilengParser.ElcompasContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MusilengParser#elcompas}.
+	 * @param ctx the parse tree
+	 */
+	void exitElcompas(@NotNull MusilengParser.ElcompasContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MusilengParser#constante}.
 	 * @param ctx the parse tree
@@ -45,25 +85,15 @@ public interface MusilengListener extends ParseTreeListener {
 	 */
 	void exitMelodia(@NotNull MusilengParser.MelodiaContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link MusilengParser#repeticion}.
+	 * Enter a parse tree produced by {@link MusilengParser#compases}.
 	 * @param ctx the parse tree
 	 */
-	void enterRepeticion(@NotNull MusilengParser.RepeticionContext ctx);
+	void enterCompases(@NotNull MusilengParser.CompasesContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link MusilengParser#repeticion}.
+	 * Exit a parse tree produced by {@link MusilengParser#compases}.
 	 * @param ctx the parse tree
 	 */
-	void exitRepeticion(@NotNull MusilengParser.RepeticionContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MusilengParser#silencio}.
-	 * @param ctx the parse tree
-	 */
-	void enterSilencio(@NotNull MusilengParser.SilencioContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MusilengParser#silencio}.
-	 * @param ctx the parse tree
-	 */
-	void exitSilencio(@NotNull MusilengParser.SilencioContext ctx);
+	void exitCompases(@NotNull MusilengParser.CompasesContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MusilengParser#tempos}.
 	 * @param ctx the parse tree
@@ -74,26 +104,6 @@ public interface MusilengListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTempos(@NotNull MusilengParser.TemposContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MusilengParser#nota}.
-	 * @param ctx the parse tree
-	 */
-	void enterNota(@NotNull MusilengParser.NotaContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MusilengParser#nota}.
-	 * @param ctx the parse tree
-	 */
-	void exitNota(@NotNull MusilengParser.NotaContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MusilengParser#elcompas}.
-	 * @param ctx the parse tree
-	 */
-	void enterElcompas(@NotNull MusilengParser.ElcompasContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MusilengParser#elcompas}.
-	 * @param ctx the parse tree
-	 */
-	void exitElcompas(@NotNull MusilengParser.ElcompasContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MusilengParser#compas}.
 	 * @param ctx the parse tree
@@ -114,16 +124,6 @@ public interface MusilengListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitConstantes(@NotNull MusilengParser.ConstantesContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MusilengParser#compases}.
-	 * @param ctx the parse tree
-	 */
-	void enterCompases(@NotNull MusilengParser.CompasesContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MusilengParser#compases}.
-	 * @param ctx the parse tree
-	 */
-	void exitCompases(@NotNull MusilengParser.CompasesContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link MusilengParser#octava}.
 	 * @param ctx the parse tree
