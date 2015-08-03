@@ -23,6 +23,42 @@ public class MusilengBaseListener implements MusilengListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRepeticion(@NotNull MusilengParser.RepeticionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRepeticion(@NotNull MusilengParser.RepeticionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSilencio(@NotNull MusilengParser.SilencioContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSilencio(@NotNull MusilengParser.SilencioContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNota(@NotNull MusilengParser.NotaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNota(@NotNull MusilengParser.NotaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterS(@NotNull MusilengParser.SContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -30,6 +66,18 @@ public class MusilengBaseListener implements MusilengListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitS(@NotNull MusilengParser.SContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElcompas(@NotNull MusilengParser.ElcompasContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElcompas(@NotNull MusilengParser.ElcompasContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -59,25 +107,13 @@ public class MusilengBaseListener implements MusilengListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRepeticion(@NotNull MusilengParser.RepeticionContext ctx) { }
+	@Override public void enterCompases(@NotNull MusilengParser.CompasesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRepeticion(@NotNull MusilengParser.RepeticionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSilencio(@NotNull MusilengParser.SilencioContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSilencio(@NotNull MusilengParser.SilencioContext ctx) { }
+	@Override public void exitCompases(@NotNull MusilengParser.CompasesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -90,30 +126,6 @@ public class MusilengBaseListener implements MusilengListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTempos(@NotNull MusilengParser.TemposContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNota(@NotNull MusilengParser.NotaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNota(@NotNull MusilengParser.NotaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterElcompas(@NotNull MusilengParser.ElcompasContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitElcompas(@NotNull MusilengParser.ElcompasContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -138,18 +150,6 @@ public class MusilengBaseListener implements MusilengListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitConstantes(@NotNull MusilengParser.ConstantesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCompases(@NotNull MusilengParser.CompasesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCompases(@NotNull MusilengParser.CompasesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -39,10 +39,7 @@ NUM: [0-9][0-9]*;
 
 NOMBRE: [_a-zA-Z][_a-zA-Z0-9]*;
 
-//OCTAVA: [1-9];
-
-COMENTARIOS:   '//(.*?)\r?\n' -> skip ;
-
+COMENTARIOS:   '//' ~[\r\n]* -> skip;
 //para escaper espacios, tabs, y saltos de linea
 WS : [ \t\r\n]+ -> skip ;
 

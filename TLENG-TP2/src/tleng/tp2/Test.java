@@ -11,7 +11,7 @@ import tleng.tp2.MusilengParser.Partitura;
 public class Test {
 	
 	public static void main(String[] args) throws IOException {
-		CharStream charStream = new ANTLRFileStream("altura_fa.mus");
+		CharStream charStream = new ANTLRFileStream("example1.txt");
 		MusilengLexer lexer = new MusilengLexer(charStream);
 		TokenStream tokenStream = new CommonTokenStream(lexer);
 		MusilengParser parser = new MusilengParser(tokenStream);
