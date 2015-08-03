@@ -57,6 +57,11 @@ import lexerGrammar;
 		return instrumento >= 0 && instrumento <= 127;
 	}
 		
+	private boolean validarVoces(List<Voz> voces) {
+		return voces.size() >= 0 && voces.size() <= 16;
+	}
+		
+		
 	private boolean validarTempo(Tempo tempo) {
 		return true;
 	}
@@ -118,7 +123,7 @@ import lexerGrammar;
 	}
 	
 	public enum NotaEnum {
-		redonda(1.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
+		redonda(4.0),blanca(2.0), negra(1.0),corchea(1/2.0),semicorchea(1/4.0),fusa(1/8.0),semifusa(1/16.0);
 		
 		private Double duracion;
 		
@@ -222,9 +227,9 @@ import lexerGrammar;
 //Gramatica 
 s returns[Partitura partitura]: tempos elcompas constantes melodia[$elcompas.indicacion] {$partitura = new Partitura($tempos.tempo, $elcompas.indicacion, $melodia.voces);};
 
-tempos returns[Tempo tempo]: NUMERAL TEMPO DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{validarTempo($tempo)}? ;
+tempos returns[Tempo tempo]: NUMERAL TEMPO DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{$NUM.int > 0}? ;
 
-elcompas returns [IndicacionCompas indicacion] : NUMERAL COMPAS n1 = NUM SLASH n2 = NUM {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
+elcompas returns [IndicacionCompas indicacion] : NUMERAL COMPAS n1 = NUM SLASH n2 = NUM {$n1.int > 0}? {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
 
 constantes: constante*;
 
@@ -232,14 +237,15 @@ constante: CONST n1 = NOMBRE IGUAL (NUM {agregarConstante($n1.text, $NUM.int)}?|
 
 melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrumento]: {$voces = new ArrayList<Voz>();} 
 		(VOZ LPAREN (NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);}) RPAREN
-		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? {$voces.add(new Voz($instrumento, $compases.listaCompases));} )+ ;
+		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? { $voces.add(new Voz($instrumento, $compases.listaCompases));} {$voces.size() <= 16}? )+;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 
 		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} c1 = compases[$indicacion] { $listaCompases.addAll($c1.listaCompases);} | 
 		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | {$listaCompases = new ArrayList<Compas>();};
 
 repeticion[IndicacionCompas indicacion] returns [List<Compas> listaCompases, int repeticiones]:
-		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NUM {$NUM.int > 0}? RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;} RBRACE ;
+		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NUM {$NUM.int > 0}? RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;} RBRACE |
+		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NOMBRE {constantes.containsKey($NOMBRE.text)  && constantes.get($NOMBRE.text) > 0}?  RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = constantes.get($NOMBRE.text);} RBRACE;
 
 compas[IndicacionCompas indicacion] returns[Compas compasObj]: 
 		{$compasObj = new Compas();}COMPAS LBRACE (
@@ -251,4 +257,6 @@ silencio returns[Nota silencioObj]: SILENCIO LPAREN DURACION PUNTILLO? RPAREN PU
 
 nota returns[Nota notaObj] : NOTA LPAREN ALTURA  COMA  octava  COMA DURACION PUNTILLO? RPAREN PUNTOYCOMA {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
 
-octava returns[int valor]: OCTAVA {$valor = $OCTAVA.int;}| NOMBRE {constantes.containsKey($NOMBRE.text) && constantes.get($NOMBRE.text) <= 9}? {$valor = constantes.get($NOMBRE.text);};
+octava returns[int valor]: NUM {$NUM.int <=9 && $NUM.int >0}? {$valor = $NUM.int;}| NOMBRE {constantes.containsKey($NOMBRE.text) && constantes.get($NOMBRE.text) <= 9  && constantes.get($NOMBRE.text) > 0}? {$valor = constantes.get($NOMBRE.text);};
+
+
