@@ -14,13 +14,12 @@ import lexerGrammar;
 	
 	public static final int CLICKS_POR_PULSO = 384;
 	
-	private boolean agregarConstante(String nombre, String valor) {		//se utiliza cuando se agrega una constante string
+	private boolean agregarConstante(String nombre, String valor) {
 		if (constantes.containsKey(valor)) {
 			constantes.put(nombre,constantes.get(valor));
 			return true;
 		} else {
-			throw new FailedPredicateException(this, String.format("La constante %s no esta definida", nombre));
-			
+			return false;
 		}
 	}
 	
@@ -30,23 +29,22 @@ import lexerGrammar;
 		return clicksPorRedonda / Double.valueOf(4 / figura.getDuracion()).intValue();
 	}
 	
-	private boolean agregarConstante(String nombre, Integer valor) {	//se utiliza cuando se agrega una constante numerica
+	private boolean agregarConstante(String nombre, Integer valor) {
 		if (constantes.containsKey(nombre)) {
-			throw new FailedPredicateException(this, String.format("La constante %s ya esta definida", nombre));
-			
+			return false;
 		}
 		constantes.put(nombre, valor);
 		return true;
+	}
+	
+	private boolean validarRepeticiones(int valor) {
+		return valor > 0;
 	}
 	
 	private boolean validarDuracion(List<Nota> notas, IndicacionCompas indicacion) {
 		Double duracion = 0.0;
 		for(Nota nota : notas) {
 			duracion += nota.calcularDuracion();
-		}
-		if (duracion.compareTo(indicacion.duracion()) != 0){
-			throw new FailedPredicateException(this, "La duracion del compas no es la correcta.");
-			
 		}
 		return duracion.compareTo(indicacion.duracion()) == 0;
 	}
@@ -59,50 +57,14 @@ import lexerGrammar;
 		return instrumento >= 0 && instrumento <= 127;
 	}
 		
-	private boolean validarVoces(int cantVoces) {
-		if (cantVoces < 0 && cantVoces > 16){
-			throw new FailedPredicateException(this,"La cantidad de voces maxima es 16.");
-		}
-		return cantVoces >= 0 && cantVoces <= 16;
+	private boolean validarVoces(List<Voz> voces) {
+		return voces.size() >= 0 && voces.size() <= 16;
 	}
-	
-	private boolean validarConstante(String nombre) {
-		if (constantes.containsKey(nombre) == false){
-			throw new FailedPredicateException(this,"La constante %s no esta definida.", nombre);
-		}
-		return constantes.containsKey(nombre);
+		
+		
+	private boolean validarTempo(Tempo tempo) {
+		return true;
 	}
-	
-	private boolean validarOctava(int octava) {
-		if (octava > 9 || octava < 1){
-			throw new FailedPredicateException(this,"La constante de la octava tiene que estar entre 1 y 9.");
-		}
-		return (octava < 10 && octava > 0);
-	}
-				
-	private boolean validarTempo(int tempo) {
-		if (tempo==0){
-			throw new FailedPredicateException(this,"En la deficion del tempo la cantidad de notas por minuto tiene que ser mayor que cero.");
-		} 
-		return (tempo > 0);
-	}
-	
-	private boolean validarCompas(int cantNotas){
-		if (cantNotas == 0)
-		{
-			throw new FailedPredicateException(this,"La cantidad de notas por compas tine que ser mayor que cero.");
-		}
-		return (cantNotas > 0);
-	}
-	
-	private boolean validarRepeticiones(int repeticiones){
-		if (repeticiones == 0)
-		{
-			throw new FailedPredicateException(this,"La cantidad de repeticiones tiene que ser mayor que cero.");
-		}
-		return (repeticiones > 0);
-	}
-	
 	
 	private void agregarRepetidos(List<Compas> listaCompases, List<Compas> nuevos, int repeticiones) {
 		for (int i = 0; i < repeticiones; i++) {
@@ -265,31 +227,25 @@ import lexerGrammar;
 //Gramatica 
 s returns[Partitura partitura]: tempos elcompas constantes melodia[$elcompas.indicacion] {$partitura = new Partitura($tempos.tempo, $elcompas.indicacion, $melodia.voces);};
 
-tempos returns[Tempo tempo]: NUMERAL TEMPO DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);validarTempo($NUM.int);};
+tempos returns[Tempo tempo]: NUMERAL TEMPO DURACION NUM {$tempo = new Tempo($DURACION.text, $NUM.int);}{$NUM.int > 0}? ;
 
-elcompas returns [IndicacionCompas indicacion] : NUMERAL COMPAS n1 = NUM SLASH n2 = NUM 
- {$indicacion = new IndicacionCompas($n1.int,$n2.int);validarCompas($n1.int);};
+elcompas returns [IndicacionCompas indicacion] : NUMERAL COMPAS n1 = NUM SLASH n2 = NUM {$n1.int > 0}? {$indicacion = new IndicacionCompas($n1.int,$n2.int);};
 
 constantes: constante*;
 
-constante: CONST n1 = NOMBRE IGUAL (NUM {agregarConstante($n1.text, $NUM.int)}?|
-			n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}? ) PUNTOYCOMA;
+constante: CONST n1 = NOMBRE IGUAL (NUM {agregarConstante($n1.text, $NUM.int)}?|n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}?) PUNTOYCOMA;
 
 melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrumento]: {$voces = new ArrayList<Voz>();} 
 		(VOZ LPAREN (NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);}) RPAREN
-		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? { $voces.add(new Voz($instrumento, $compases.listaCompases));validarVoces($voces.size());} )+;
+		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? { $voces.add(new Voz($instrumento, $compases.listaCompases));} {$voces.size() <= 16}? )+;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 
 		{$listaCompases = new ArrayList<Compas>();} compas[$indicacion] {$listaCompases.add($compas.compasObj);} c1 = compases[$indicacion] { $listaCompases.addAll($c1.listaCompases);} | 
-		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] |
-		 {$listaCompases = new ArrayList<Compas>();};
+		{$listaCompases = new ArrayList<Compas>();} repeticion[$indicacion] {agregarRepetidos($listaCompases,$repeticion.listaCompases,$repeticion.repeticiones);} compases[$indicacion] | {$listaCompases = new ArrayList<Compas>();};
 
 repeticion[IndicacionCompas indicacion] returns [List<Compas> listaCompases, int repeticiones]:
-		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NUM {validarRepeticiones($NUM.int);} RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;} RBRACE |
-		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NOMBRE 
-		{ validarConstante($NOMBRE.text);} { validarRepeticiones(constantes.get($NOMBRE.text));}
-		  RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ 
-		  {$repeticiones = constantes.get($NOMBRE.text);} RBRACE;
+		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NUM {$NUM.int > 0}? RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = $NUM.int;} RBRACE |
+		{$listaCompases = new ArrayList<Compas>();} REPETIR LPAREN NOMBRE {constantes.containsKey($NOMBRE.text)  && constantes.get($NOMBRE.text) > 0}?  RPAREN LBRACE (compas[$indicacion] {$listaCompases.add($compas.compasObj);})+ {$repeticiones = constantes.get($NOMBRE.text);} RBRACE;
 
 compas[IndicacionCompas indicacion] returns[Compas compasObj]: 
 		{$compasObj = new Compas();}COMPAS LBRACE (
@@ -297,12 +253,10 @@ compas[IndicacionCompas indicacion] returns[Compas compasObj]:
 			silencio {$compasObj.notas.add($silencio.silencioObj);}
 		)+RBRACE {validarDuracion($compasObj.notas, $indicacion)}?;
 
-silencio returns[Nota silencioObj]: SILENCIO LPAREN DURACION PUNTILLO? RPAREN PUNTOYCOMA 
-{$silencioObj = new Nota(null,null,$DURACION.text,$PUNTILLO != null ? true : false);};
+silencio returns[Nota silencioObj]: SILENCIO LPAREN DURACION PUNTILLO? RPAREN PUNTOYCOMA {$silencioObj = new Nota(null,null,$DURACION.text,$PUNTILLO != null ? true : false);};
 
-nota returns[Nota notaObj] : NOTA LPAREN ALTURA  COMA  octava  COMA DURACION PUNTILLO? RPAREN PUNTOYCOMA 
-{$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
+nota returns[Nota notaObj] : NOTA LPAREN ALTURA  COMA  octava  COMA DURACION PUNTILLO? RPAREN PUNTOYCOMA {$notaObj = new Nota($ALTURA.text,$octava.valor,$DURACION.text, $PUNTILLO != null);};
 
-octava returns[int valor]: NUM {validarOctava($NUM.int);} {$valor = $NUM.int;}|
- NOMBRE { validarConstante($NOMBRE.text); validarOctava(constantes.get($NOMBRE.text));}
- 	 {$valor = constantes.get($NOMBRE.text);};
+octava returns[int valor]: NUM {$NUM.int <=9 && $NUM.int >0}? {$valor = $NUM.int;}| NOMBRE {constantes.containsKey($NOMBRE.text) && constantes.get($NOMBRE.text) <= 9  && constantes.get($NOMBRE.text) > 0}? {$valor = constantes.get($NOMBRE.text);};
+
+
