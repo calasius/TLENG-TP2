@@ -36,29 +36,35 @@ public class midicomp {
 				MusilengLexer lexer = new MusilengLexer(charStream);
 				TokenStream tokenStream = new CommonTokenStream(lexer);
 				MusilengParser parser = new MusilengParser(tokenStream);
-				Partitura partitura = parser.s().partitura;
-				
-				PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(midiFile)));
-				
-				//Encabezado
-				int NTRACKS = partitura.voces.size()+1;
-				double midi_tempo = 1000000 * 60 * (4/ NotaEnum.valueOf(partitura.tempo.duracion).getDuracion()) / (4 * partitura.tempo.cantidad);
-				String midi_bar = String.format("%s/%s", partitura.indicacion.tiempos, partitura.indicacion.tipoNota);
-				writer.println(String.format("MFile 1 %d 384", NTRACKS));
-				writer.println(String.format("MTrk"));
-				writer.println(String.format("000:00:000 Tempo %.0f",midi_tempo));
-				writer.println(String.format("000:00:000 TimeSig %s 24 8",midi_bar));
-				writer.println("000:00:000 Meta TrkEnd");
-				writer.println("TrkEnd");
-				
-				int i = 1;
-				for (Voz voz : partitura.voces) {
-					generarTrack(voz, i, partitura.indicacion, 384, writer);
-					i = i + 1;
+				parser.setErrorHandler(new ErrorStrategy());
+				try {
+					Partitura partitura = parser.s().partitura;					
+					PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(midiFile)));
+					
+					//Encabezado
+					int NTRACKS = partitura.voces.size()+1;
+					double midi_tempo = 1000000 * 60 * (4/ NotaEnum.valueOf(partitura.tempo.duracion).getDuracion()) / (4 * partitura.tempo.cantidad);
+					String midi_bar = String.format("%s/%s", partitura.indicacion.tiempos, partitura.indicacion.tipoNota);
+					writer.println(String.format("MFile 1 %d 384", NTRACKS));
+					writer.println(String.format("MTrk"));
+					writer.println(String.format("000:00:000 Tempo %.0f",midi_tempo));
+					writer.println(String.format("000:00:000 TimeSig %s 24 8",midi_bar));
+					writer.println("000:00:000 Meta TrkEnd");
+					writer.println("TrkEnd");
+					
+					int i = 1;
+					for (Voz voz : partitura.voces) {
+						generarTrack(voz, i, partitura.indicacion, 384, writer);
+						i = i + 1;
+					}
+					
+					writer.flush();
+					writer.close();
+				} catch (RuntimeException e) {
+					System.err.println(e.getMessage());
+					return;
 				}
-
-				writer.flush();
-				writer.close();
+				
 			}
 		}
 			
