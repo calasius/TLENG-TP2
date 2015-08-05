@@ -236,7 +236,7 @@ constantes: constante*;
 constante: CONST n1 = NOMBRE IGUAL (NUM {agregarConstante($n1.text, $NUM.int)}?|n2 = NOMBRE{agregarConstante($n1.text, $n2.text)}?) PUNTOYCOMA;
 
 melodia[IndicacionCompas indicacion] returns[List<Voz> voces] locals[int instrumento]: {$voces = new ArrayList<Voz>();} 
-		(VOZ LPAREN (NUM {$instrumento = $NUM.int;}|NOMBRE {constantes.containsKey($NOMBRE.text)}? {$instrumento = constantes.get($NOMBRE.text);}) RPAREN
+		(VOZ LPAREN (NUM {$instrumento = $NUM.int;} {$NUM.int < 127 && $NUM.int >= 0}?|NOMBRE {constantes.containsKey($NOMBRE.text)}? {constantes.get($NOMBRE.text) <= 127 && constantes.get($NOMBRE.text) >= 0}? {$instrumento = constantes.get($NOMBRE.text);}) RPAREN
 		LBRACE compases[$indicacion] RBRACE {validarAlMenosUnCompas($compases.listaCompases)}? { $voces.add(new Voz($instrumento, $compases.listaCompases));} {$voces.size() <= 16}? )+;
 
 compases[IndicacionCompas indicacion] returns[List<Compas> listaCompases] : 

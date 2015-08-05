@@ -11,7 +11,7 @@ import tleng.tp2.MusilengParser.Partitura;
 public class Test {
 	
 	public static void main(String[] args) throws IOException {
-		CharStream charStream = new ANTLRFileStream("compas_0_blanca.mus");
+		CharStream charStream = new ANTLRFileStream("comentario.mus");
 		MusilengLexer lexer = new MusilengLexer(charStream);
 		TokenStream tokenStream = new CommonTokenStream(lexer);
 		MusilengParser parser = new MusilengParser(tokenStream);

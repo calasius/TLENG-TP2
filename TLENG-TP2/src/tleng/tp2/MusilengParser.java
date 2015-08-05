@@ -2,16 +2,15 @@
 package tleng.tp2;
 
 	import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
+	import java.util.Map;
+	import java.util.List;
+	import java.util.ArrayList;
 
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.*;
 import org.antlr.v4.runtime.tree.*;
-
 import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -25,13 +24,13 @@ public class MusilengParser extends Parser {
 		new PredictionContextCache();
 	public static final int
 		TEMPO=1, COMPAS=2, CONST=3, IGUAL=4, VOZ=5, LPAREN=6, RPAREN=7, LBRACE=8, 
-		RBRACE=9, NUMERAL=10, COMA=11, PUNTOYCOMA=12, SLASH=13, REPETIR=14, SILENCIO=15, 
-		NOTA=16, PUNTILLO=17, DURACION=18, ALTURA=19, NUM=20, NOMBRE=21, COMENTARIOS=22, 
-		WS=23;
+		RBRACE=9, NUMERAL=10, COMA=11, PUNTOYCOMA=12, SLASH=13, COMENTARIOS=14, 
+		REPETIR=15, SILENCIO=16, NOTA=17, PUNTILLO=18, DURACION=19, ALTURA=20, 
+		NUM=21, NOMBRE=22, WS=23;
 	public static final String[] tokenNames = {
 		"<INVALID>", "'tempo'", "'compas'", "'const'", "'='", "'voz'", "'('", 
-		"')'", "'{'", "'}'", "'#'", "','", "';'", "'/'", "'repetir'", "'silencio'", 
-		"'nota'", "'.'", "DURACION", "ALTURA", "NUM", "NOMBRE", "'//(.*?)\r?\n'", 
+		"')'", "'{'", "'}'", "'#'", "','", "';'", "'/'", "COMENTARIOS", "'repetir'", 
+		"'silencio'", "'nota'", "'.'", "DURACION", "ALTURA", "NUM", "NOMBRE", 
 		"WS"
 	};
 	public static final int
@@ -42,29 +41,6 @@ public class MusilengParser extends Parser {
 		"s", "tempos", "elcompas", "constantes", "constante", "melodia", "compases", 
 		"repeticion", "compas", "silencio", "nota", "octava"
 	};
-	
-	
-	
-	public Token match(int ttype) throws RecognitionException {
-		Token t = getCurrentToken();
-		if ( t.getType()==ttype ) {
-			if ( ttype==Token.EOF ) {
-				matchedEOF = true;
-			}
-			_errHandler.reportMatch(this);
-			consume();
-		}
-		else {
-			t = _errHandler.recoverInline(this);
-			throw new RuntimeException();
-//			if ( _buildParseTrees && t.getTokenIndex()==-1 ) {
-//				// we must have conjured up a new token during single token insertion
-//				// if it's not the current symbol
-//				_ctx.addErrorNode(t);
-//			}
-		}
-		return t;
-	}
 
 	@Override
 	public String getGrammarFileName() { return "Musileng.g4"; }
@@ -304,17 +280,17 @@ public class MusilengParser extends Parser {
 		public TemposContext tempos;
 		public ElcompasContext elcompas;
 		public MelodiaContext melodia;
-		public TemposContext tempos() {
-			return getRuleContext(TemposContext.class,0);
-		}
-		public ConstantesContext constantes() {
-			return getRuleContext(ConstantesContext.class,0);
-		}
 		public ElcompasContext elcompas() {
 			return getRuleContext(ElcompasContext.class,0);
 		}
 		public MelodiaContext melodia() {
 			return getRuleContext(MelodiaContext.class,0);
+		}
+		public TemposContext tempos() {
+			return getRuleContext(TemposContext.class,0);
+		}
+		public ConstantesContext constantes() {
+			return getRuleContext(ConstantesContext.class,0);
 		}
 		public SContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -359,9 +335,9 @@ public class MusilengParser extends Parser {
 		public Token DURACION;
 		public Token NUM;
 		public TerminalNode NUMERAL() { return getToken(MusilengParser.NUMERAL, 0); }
-		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
-		public TerminalNode TEMPO() { return getToken(MusilengParser.TEMPO, 0); }
 		public TerminalNode DURACION() { return getToken(MusilengParser.DURACION, 0); }
+		public TerminalNode TEMPO() { return getToken(MusilengParser.TEMPO, 0); }
+		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
 		public TemposContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -388,7 +364,7 @@ public class MusilengParser extends Parser {
 			setState(33); ((TemposContext)_localctx).NUM = match(NUM);
 			((TemposContext)_localctx).tempo =  new Tempo((((TemposContext)_localctx).DURACION!=null?((TemposContext)_localctx).DURACION.getText():null), (((TemposContext)_localctx).NUM!=null?Integer.valueOf(((TemposContext)_localctx).NUM.getText()):0));
 			setState(35);
-			if (!((((TemposContext)_localctx).NUM!=null?Integer.valueOf(((TemposContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "En la defición del tempo la cantidad de notas por minuto tiene que ser mayor que cero.");
+			if (!((((TemposContext)_localctx).NUM!=null?Integer.valueOf(((TemposContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "En la deficiÃ³n del tempo la cantidad de notas por minuto tiene que ser mayor que cero.");
 			}
 		}
 		catch (RecognitionException re) {
@@ -406,13 +382,13 @@ public class MusilengParser extends Parser {
 		public IndicacionCompas indicacion;
 		public Token n1;
 		public Token n2;
-		public TerminalNode COMPAS() { return getToken(MusilengParser.COMPAS, 0); }
 		public TerminalNode NUMERAL() { return getToken(MusilengParser.NUMERAL, 0); }
-		public List<TerminalNode> NUM() { return getTokens(MusilengParser.NUM); }
-		public TerminalNode SLASH() { return getToken(MusilengParser.SLASH, 0); }
+		public TerminalNode COMPAS() { return getToken(MusilengParser.COMPAS, 0); }
 		public TerminalNode NUM(int i) {
 			return getToken(MusilengParser.NUM, i);
 		}
+		public TerminalNode SLASH() { return getToken(MusilengParser.SLASH, 0); }
+		public List<TerminalNode> NUM() { return getTokens(MusilengParser.NUM); }
 		public ElcompasContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -439,15 +415,14 @@ public class MusilengParser extends Parser {
 			setState(40); match(SLASH);
 			setState(41); ((ElcompasContext)_localctx).n2 = match(NUM);
 			setState(42);
-			if (!((((ElcompasContext)_localctx).n1!=null?Integer.valueOf(((ElcompasContext)_localctx).n1.getText()):0) > 0)) throw new FailedPredicateException(this, "La cantidad de notas por compas tine que ser mayor que cero.");
+			if (!((((ElcompasContext)_localctx).n1!=null?Integer.valueOf(((ElcompasContext)_localctx).n1.getText()):0) > 0)) throw new FailedPredicateException(this, "La cantidad de notas por compas tiene que ser mayor a 0.");
 			((ElcompasContext)_localctx).indicacion =  new IndicacionCompas((((ElcompasContext)_localctx).n1!=null?Integer.valueOf(((ElcompasContext)_localctx).n1.getText()):0),(((ElcompasContext)_localctx).n2!=null?Integer.valueOf(((ElcompasContext)_localctx).n2.getText()):0));
 			}
 		}
 		catch (RecognitionException re) {
 			_localctx.exception = re;
 			_errHandler.reportError(this, re);
-			throw new RuntimeException();
-//			_errHandler.recover(this, re);
+			_errHandler.recover(this, re);
 		}
 		finally {
 			exitRule();
@@ -456,11 +431,11 @@ public class MusilengParser extends Parser {
 	}
 
 	public static class ConstantesContext extends ParserRuleContext {
-		public List<ConstanteContext> constante() {
-			return getRuleContexts(ConstanteContext.class);
-		}
 		public ConstanteContext constante(int i) {
 			return getRuleContext(ConstanteContext.class,i);
+		}
+		public List<ConstanteContext> constante() {
+			return getRuleContexts(ConstanteContext.class);
 		}
 		public ConstantesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -513,14 +488,14 @@ public class MusilengParser extends Parser {
 		public Token n1;
 		public Token NUM;
 		public Token n2;
-		public TerminalNode CONST() { return getToken(MusilengParser.CONST, 0); }
+		public List<TerminalNode> NOMBRE() { return getTokens(MusilengParser.NOMBRE); }
 		public TerminalNode NOMBRE(int i) {
 			return getToken(MusilengParser.NOMBRE, i);
 		}
-		public List<TerminalNode> NOMBRE() { return getTokens(MusilengParser.NOMBRE); }
-		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
-		public TerminalNode IGUAL() { return getToken(MusilengParser.IGUAL, 0); }
 		public TerminalNode PUNTOYCOMA() { return getToken(MusilengParser.PUNTOYCOMA, 0); }
+		public TerminalNode IGUAL() { return getToken(MusilengParser.IGUAL, 0); }
+		public TerminalNode CONST() { return getToken(MusilengParser.CONST, 0); }
+		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
 		public ConstanteContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -550,14 +525,14 @@ public class MusilengParser extends Parser {
 				{
 				setState(54); ((ConstanteContext)_localctx).NUM = match(NUM);
 				setState(55);
-				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0)))) throw new FailedPredicateException(this, String.format("La constante %s ya esta definida", ((ConstanteContext)_localctx).n1.getText()));
+				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0)))) throw new FailedPredicateException(this,  String.format("La constante %s ya esta definida", ((ConstanteContext)_localctx).n1.getText()));
 				}
 				break;
 			case NOMBRE:
 				{
 				setState(56); ((ConstanteContext)_localctx).n2 = match(NOMBRE);
 				setState(57);
-				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null)))) throw new FailedPredicateException(this, String.format("La constante %s no esta definida.", ((ConstanteContext)_localctx).n2.getText()));
+				if (!(agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null)))) throw new FailedPredicateException(this, String.format("La constante %s no esta definida", ((ConstanteContext)_localctx).n1.getText()));
 				}
 				break;
 			default:
@@ -584,40 +559,40 @@ public class MusilengParser extends Parser {
 		public Token NUM;
 		public Token NOMBRE;
 		public CompasesContext compases;
-		public TerminalNode VOZ(int i) {
-			return getToken(MusilengParser.VOZ, i);
-		}
 		public List<TerminalNode> LBRACE() { return getTokens(MusilengParser.LBRACE); }
-		public List<TerminalNode> NUM() { return getTokens(MusilengParser.NUM); }
-		public List<TerminalNode> NOMBRE() { return getTokens(MusilengParser.NOMBRE); }
-		public TerminalNode LBRACE(int i) {
-			return getToken(MusilengParser.LBRACE, i);
-		}
-		public List<TerminalNode> RPAREN() { return getTokens(MusilengParser.RPAREN); }
 		public TerminalNode RBRACE(int i) {
 			return getToken(MusilengParser.RBRACE, i);
-		}
-		public List<CompasesContext> compases() {
-			return getRuleContexts(CompasesContext.class);
-		}
-		public List<TerminalNode> RBRACE() { return getTokens(MusilengParser.RBRACE); }
-		public TerminalNode NOMBRE(int i) {
-			return getToken(MusilengParser.NOMBRE, i);
 		}
 		public TerminalNode RPAREN(int i) {
 			return getToken(MusilengParser.RPAREN, i);
 		}
-		public List<TerminalNode> LPAREN() { return getTokens(MusilengParser.LPAREN); }
+		public List<TerminalNode> NOMBRE() { return getTokens(MusilengParser.NOMBRE); }
+		public List<TerminalNode> VOZ() { return getTokens(MusilengParser.VOZ); }
+		public TerminalNode NOMBRE(int i) {
+			return getToken(MusilengParser.NOMBRE, i);
+		}
 		public TerminalNode NUM(int i) {
 			return getToken(MusilengParser.NUM, i);
 		}
-		public CompasesContext compases(int i) {
-			return getRuleContext(CompasesContext.class,i);
+		public List<TerminalNode> LPAREN() { return getTokens(MusilengParser.LPAREN); }
+		public List<TerminalNode> RBRACE() { return getTokens(MusilengParser.RBRACE); }
+		public List<CompasesContext> compases() {
+			return getRuleContexts(CompasesContext.class);
 		}
-		public List<TerminalNode> VOZ() { return getTokens(MusilengParser.VOZ); }
 		public TerminalNode LPAREN(int i) {
 			return getToken(MusilengParser.LPAREN, i);
 		}
+		public List<TerminalNode> RPAREN() { return getTokens(MusilengParser.RPAREN); }
+		public CompasesContext compases(int i) {
+			return getRuleContext(CompasesContext.class,i);
+		}
+		public TerminalNode VOZ(int i) {
+			return getToken(MusilengParser.VOZ, i);
+		}
+		public TerminalNode LBRACE(int i) {
+			return getToken(MusilengParser.LBRACE, i);
+		}
+		public List<TerminalNode> NUM() { return getTokens(MusilengParser.NUM); }
 		public MelodiaContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
 		public MelodiaContext(ParserRuleContext parent, int invokingState, IndicacionCompas indicacion) {
 			super(parent, invokingState);
@@ -642,7 +617,7 @@ public class MusilengParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			((MelodiaContext)_localctx).voces =  new ArrayList<Voz>();
-			setState(80); 
+			setState(82); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
@@ -650,37 +625,41 @@ public class MusilengParser extends Parser {
 				{
 				setState(63); match(VOZ);
 				setState(64); match(LPAREN);
-				setState(70);
+				setState(72);
 				switch (_input.LA(1)) {
 				case NUM:
 					{
 					setState(65); ((MelodiaContext)_localctx).NUM = match(NUM);
 					((MelodiaContext)_localctx).instrumento =  (((MelodiaContext)_localctx).NUM!=null?Integer.valueOf(((MelodiaContext)_localctx).NUM.getText()):0);
+					setState(67);
+					if (!((((MelodiaContext)_localctx).NUM!=null?Integer.valueOf(((MelodiaContext)_localctx).NUM.getText()):0) < 127 && (((MelodiaContext)_localctx).NUM!=null?Integer.valueOf(((MelodiaContext)_localctx).NUM.getText()):0) >= 0)) throw new FailedPredicateException(this, "El instrumento no esta en el rango de 0 a 127");
 					}
 					break;
 				case NOMBRE:
 					{
-					setState(67); ((MelodiaContext)_localctx).NOMBRE = match(NOMBRE);
-					setState(68);
-					if (!(constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)))) throw new FailedPredicateException(this, String.format("La constante %s no esta definida.", ((MelodiaContext)_localctx).NOMBRE.getText()));
+					setState(68); ((MelodiaContext)_localctx).NOMBRE = match(NOMBRE);
+					setState(69);
+					if (!(constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)))) throw new FailedPredicateException(this, String.format("La constante del instrumento %s no esta definida", ((MelodiaContext)_localctx).NOMBRE.getText()));
+					setState(70);
+					if (!(constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)) <= 127 && constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)) >= 0)) throw new FailedPredicateException(this, "El instrumento no esta en el rango de 0 a 127");
 					((MelodiaContext)_localctx).instrumento =  constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null));
 					}
 					break;
 				default:
 					throw new NoViableAltException(this);
 				}
-				setState(72); match(RPAREN);
-				setState(73); match(LBRACE);
-				setState(74); ((MelodiaContext)_localctx).compases = compases(_localctx.indicacion);
-				setState(75); match(RBRACE);
-				setState(76);
-				if (!(validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases))) throw new FailedPredicateException(this, "Tiene que tener al menos un compas.");
-				 _localctx.voces.add(new Voz(_localctx.instrumento, ((MelodiaContext)_localctx).compases.listaCompases));
+				setState(74); match(RPAREN);
+				setState(75); match(LBRACE);
+				setState(76); ((MelodiaContext)_localctx).compases = compases(_localctx.indicacion);
+				setState(77); match(RBRACE);
 				setState(78);
-				if (!(_localctx.voces.size() <= 16)) throw new FailedPredicateException(this, "La cantidad de voces tiene que ser <= 16.");
+				if (!(validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases))) throw new FailedPredicateException(this, "Tiene que tener al menos un compas");
+				 _localctx.voces.add(new Voz(_localctx.instrumento, ((MelodiaContext)_localctx).compases.listaCompases));
+				setState(80);
+				if (!(_localctx.voces.size() <= 16)) throw new FailedPredicateException(this, "La cantidad de voces maxima es 16.");
 				}
 				}
-				setState(82); 
+				setState(84); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==VOZ );
@@ -703,14 +682,14 @@ public class MusilengParser extends Parser {
 		public CompasContext compas;
 		public CompasesContext c1;
 		public RepeticionContext repeticion;
-		public CompasesContext compases() {
-			return getRuleContext(CompasesContext.class,0);
-		}
 		public RepeticionContext repeticion() {
 			return getRuleContext(RepeticionContext.class,0);
 		}
 		public CompasContext compas() {
 			return getRuleContext(CompasContext.class,0);
+		}
+		public CompasesContext compases() {
+			return getRuleContext(CompasesContext.class,0);
 		}
 		public CompasesContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
 		public CompasesContext(ParserRuleContext parent, int invokingState, IndicacionCompas indicacion) {
@@ -732,15 +711,15 @@ public class MusilengParser extends Parser {
 		CompasesContext _localctx = new CompasesContext(_ctx, getState(), indicacion);
 		enterRule(_localctx, 12, RULE_compases);
 		try {
-			setState(96);
+			setState(98);
 			switch (_input.LA(1)) {
 			case COMPAS:
 				enterOuterAlt(_localctx, 1);
 				{
 				((CompasesContext)_localctx).listaCompases =  new ArrayList<Compas>();
-				setState(85); ((CompasesContext)_localctx).compas = compas(_localctx.indicacion);
+				setState(87); ((CompasesContext)_localctx).compas = compas(_localctx.indicacion);
 				_localctx.listaCompases.add(((CompasesContext)_localctx).compas.compasObj);
-				setState(87); ((CompasesContext)_localctx).c1 = compases(_localctx.indicacion);
+				setState(89); ((CompasesContext)_localctx).c1 = compases(_localctx.indicacion);
 				 _localctx.listaCompases.addAll(((CompasesContext)_localctx).c1.listaCompases);
 				}
 				break;
@@ -748,9 +727,9 @@ public class MusilengParser extends Parser {
 				enterOuterAlt(_localctx, 2);
 				{
 				((CompasesContext)_localctx).listaCompases =  new ArrayList<Compas>();
-				setState(91); ((CompasesContext)_localctx).repeticion = repeticion(_localctx.indicacion);
+				setState(93); ((CompasesContext)_localctx).repeticion = repeticion(_localctx.indicacion);
 				agregarRepetidos(_localctx.listaCompases,((CompasesContext)_localctx).repeticion.listaCompases,((CompasesContext)_localctx).repeticion.repeticiones);
-				setState(93); compases(_localctx.indicacion);
+				setState(95); compases(_localctx.indicacion);
 				}
 				break;
 			case RBRACE:
@@ -781,19 +760,19 @@ public class MusilengParser extends Parser {
 		public Token NUM;
 		public CompasContext compas;
 		public Token NOMBRE;
-		public TerminalNode RBRACE() { return getToken(MusilengParser.RBRACE, 0); }
-		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
-		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
 		public TerminalNode LBRACE() { return getToken(MusilengParser.LBRACE, 0); }
 		public TerminalNode NOMBRE() { return getToken(MusilengParser.NOMBRE, 0); }
-		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
-		public TerminalNode REPETIR() { return getToken(MusilengParser.REPETIR, 0); }
 		public CompasContext compas(int i) {
 			return getRuleContext(CompasContext.class,i);
 		}
+		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
 		public List<CompasContext> compas() {
 			return getRuleContexts(CompasContext.class);
 		}
+		public TerminalNode RBRACE() { return getToken(MusilengParser.RBRACE, 0); }
+		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
+		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
+		public TerminalNode REPETIR() { return getToken(MusilengParser.REPETIR, 0); }
 		public RepeticionContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
 		public RepeticionContext(ParserRuleContext parent, int invokingState, IndicacionCompas indicacion) {
 			super(parent, invokingState);
@@ -815,64 +794,64 @@ public class MusilengParser extends Parser {
 		enterRule(_localctx, 14, RULE_repeticion);
 		int _la;
 		try {
-			setState(132);
+			setState(134);
 			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
 				((RepeticionContext)_localctx).listaCompases =  new ArrayList<Compas>();
-				setState(99); match(REPETIR);
-				setState(100); match(LPAREN);
-				setState(101); ((RepeticionContext)_localctx).NUM = match(NUM);
-				setState(102);
-				if (!((((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "La cantidad de repeticiones tiene que ser mayor que cero");
-				setState(103); match(RPAREN);
-				setState(104); match(LBRACE);
-				setState(108); 
+				setState(101); match(REPETIR);
+				setState(102); match(LPAREN);
+				setState(103); ((RepeticionContext)_localctx).NUM = match(NUM);
+				setState(104);
+				if (!((((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0)) throw new FailedPredicateException(this, "La cantidad de repeticiones debe ser mayor a 0.");
+				setState(105); match(RPAREN);
+				setState(106); match(LBRACE);
+				setState(110); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(105); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
+					setState(107); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
 					_localctx.listaCompases.add(((RepeticionContext)_localctx).compas.compasObj);
 					}
 					}
-					setState(110); 
+					setState(112); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==COMPAS );
 				((RepeticionContext)_localctx).repeticiones =  (((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0);
-				setState(113); match(RBRACE);
+				setState(115); match(RBRACE);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				((RepeticionContext)_localctx).listaCompases =  new ArrayList<Compas>();
-				setState(116); match(REPETIR);
-				setState(117); match(LPAREN);
-				setState(118); ((RepeticionContext)_localctx).NOMBRE = match(NOMBRE);
-				setState(119);
-				if (!(constantes.containsKey((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null))  && constantes.get((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null)) > 0)) throw new FailedPredicateException(this, "La constante para las repeticiones tiene que estar definida y su valor tiene que ser mayor que cero.");
-				setState(120); match(RPAREN);
-				setState(121); match(LBRACE);
-				setState(125); 
+				setState(118); match(REPETIR);
+				setState(119); match(LPAREN);
+				setState(120); ((RepeticionContext)_localctx).NOMBRE = match(NOMBRE);
+				setState(121);
+				if (!(constantes.containsKey((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null))  && constantes.get((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null)) > 0)) throw new FailedPredicateException(this, String.format("La constante %s debe estar definida y ser mayor a 0"),((RepeticionContext)_localctx).NOMBRE.getText());
+				setState(122); match(RPAREN);
+				setState(123); match(LBRACE);
+				setState(127); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(122); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
+					setState(124); ((RepeticionContext)_localctx).compas = compas(_localctx.indicacion);
 					_localctx.listaCompases.add(((RepeticionContext)_localctx).compas.compasObj);
 					}
 					}
-					setState(127); 
+					setState(129); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==COMPAS );
 				((RepeticionContext)_localctx).repeticiones =  constantes.get((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null));
-				setState(130); match(RBRACE);
+				setState(132); match(RBRACE);
 				}
 				break;
 			}
@@ -893,20 +872,20 @@ public class MusilengParser extends Parser {
 		public Compas compasObj;
 		public NotaContext nota;
 		public SilencioContext silencio;
-		public TerminalNode COMPAS() { return getToken(MusilengParser.COMPAS, 0); }
+		public NotaContext nota(int i) {
+			return getRuleContext(NotaContext.class,i);
+		}
+		public TerminalNode LBRACE() { return getToken(MusilengParser.LBRACE, 0); }
 		public SilencioContext silencio(int i) {
 			return getRuleContext(SilencioContext.class,i);
 		}
+		public TerminalNode COMPAS() { return getToken(MusilengParser.COMPAS, 0); }
 		public TerminalNode RBRACE() { return getToken(MusilengParser.RBRACE, 0); }
-		public TerminalNode LBRACE() { return getToken(MusilengParser.LBRACE, 0); }
-		public List<NotaContext> nota() {
-			return getRuleContexts(NotaContext.class);
-		}
 		public List<SilencioContext> silencio() {
 			return getRuleContexts(SilencioContext.class);
 		}
-		public NotaContext nota(int i) {
-			return getRuleContext(NotaContext.class,i);
+		public List<NotaContext> nota() {
+			return getRuleContexts(NotaContext.class);
 		}
 		public CompasContext(ParserRuleContext parent, int invokingState) { super(parent, invokingState); }
 		public CompasContext(ParserRuleContext parent, int invokingState, IndicacionCompas indicacion) {
@@ -932,24 +911,24 @@ public class MusilengParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			((CompasContext)_localctx).compasObj =  new Compas();
-			setState(135); match(COMPAS);
-			setState(136); match(LBRACE);
-			setState(143); 
+			setState(137); match(COMPAS);
+			setState(138); match(LBRACE);
+			setState(145); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
-				setState(143);
+				setState(145);
 				switch (_input.LA(1)) {
 				case NOTA:
 					{
-					setState(137); ((CompasContext)_localctx).nota = nota();
+					setState(139); ((CompasContext)_localctx).nota = nota();
 					_localctx.compasObj.notas.add(((CompasContext)_localctx).nota.notaObj);
 					}
 					break;
 				case SILENCIO:
 					{
-					setState(140); ((CompasContext)_localctx).silencio = silencio();
+					setState(142); ((CompasContext)_localctx).silencio = silencio();
 					_localctx.compasObj.notas.add(((CompasContext)_localctx).silencio.silencioObj);
 					}
 					break;
@@ -957,13 +936,13 @@ public class MusilengParser extends Parser {
 					throw new NoViableAltException(this);
 				}
 				}
-				setState(145); 
+				setState(147); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==SILENCIO || _la==NOTA );
-			setState(147); match(RBRACE);
-			setState(148);
-			if (!(validarDuracion(_localctx.compasObj.notas, _localctx.indicacion))) throw new FailedPredicateException(this, "La duración del compas no es la correcta.");
+			setState(149); match(RBRACE);
+			setState(150);
+			if (!(validarDuracion(_localctx.compasObj.notas, _localctx.indicacion))) throw new FailedPredicateException(this, "La duracion del compas no es la correcta.");
 			}
 		}
 		catch (RecognitionException re) {
@@ -981,12 +960,12 @@ public class MusilengParser extends Parser {
 		public Nota silencioObj;
 		public Token DURACION;
 		public Token PUNTILLO;
-		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
-		public TerminalNode PUNTILLO() { return getToken(MusilengParser.PUNTILLO, 0); }
-		public TerminalNode SILENCIO() { return getToken(MusilengParser.SILENCIO, 0); }
-		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
 		public TerminalNode DURACION() { return getToken(MusilengParser.DURACION, 0); }
+		public TerminalNode PUNTILLO() { return getToken(MusilengParser.PUNTILLO, 0); }
+		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
+		public TerminalNode SILENCIO() { return getToken(MusilengParser.SILENCIO, 0); }
 		public TerminalNode PUNTOYCOMA() { return getToken(MusilengParser.PUNTOYCOMA, 0); }
+		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
 		public SilencioContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1008,19 +987,19 @@ public class MusilengParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(150); match(SILENCIO);
-			setState(151); match(LPAREN);
-			setState(152); ((SilencioContext)_localctx).DURACION = match(DURACION);
-			setState(154);
+			setState(152); match(SILENCIO);
+			setState(153); match(LPAREN);
+			setState(154); ((SilencioContext)_localctx).DURACION = match(DURACION);
+			setState(156);
 			_la = _input.LA(1);
 			if (_la==PUNTILLO) {
 				{
-				setState(153); ((SilencioContext)_localctx).PUNTILLO = match(PUNTILLO);
+				setState(155); ((SilencioContext)_localctx).PUNTILLO = match(PUNTILLO);
 				}
 			}
 
-			setState(156); match(RPAREN);
-			setState(157); match(PUNTOYCOMA);
+			setState(158); match(RPAREN);
+			setState(159); match(PUNTOYCOMA);
 			((SilencioContext)_localctx).silencioObj =  new Nota(null,null,(((SilencioContext)_localctx).DURACION!=null?((SilencioContext)_localctx).DURACION.getText():null),((SilencioContext)_localctx).PUNTILLO != null ? true : false);
 			}
 		}
@@ -1041,20 +1020,20 @@ public class MusilengParser extends Parser {
 		public OctavaContext octava;
 		public Token DURACION;
 		public Token PUNTILLO;
-		public TerminalNode NOTA() { return getToken(MusilengParser.NOTA, 0); }
-		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
-		public TerminalNode PUNTILLO() { return getToken(MusilengParser.PUNTILLO, 0); }
+		public TerminalNode ALTURA() { return getToken(MusilengParser.ALTURA, 0); }
+		public TerminalNode DURACION() { return getToken(MusilengParser.DURACION, 0); }
 		public OctavaContext octava() {
 			return getRuleContext(OctavaContext.class,0);
 		}
+		public TerminalNode NOTA() { return getToken(MusilengParser.NOTA, 0); }
+		public TerminalNode PUNTILLO() { return getToken(MusilengParser.PUNTILLO, 0); }
+		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
+		public List<TerminalNode> COMA() { return getTokens(MusilengParser.COMA); }
+		public TerminalNode PUNTOYCOMA() { return getToken(MusilengParser.PUNTOYCOMA, 0); }
+		public TerminalNode LPAREN() { return getToken(MusilengParser.LPAREN, 0); }
 		public TerminalNode COMA(int i) {
 			return getToken(MusilengParser.COMA, i);
 		}
-		public TerminalNode RPAREN() { return getToken(MusilengParser.RPAREN, 0); }
-		public TerminalNode ALTURA() { return getToken(MusilengParser.ALTURA, 0); }
-		public TerminalNode DURACION() { return getToken(MusilengParser.DURACION, 0); }
-		public List<TerminalNode> COMA() { return getTokens(MusilengParser.COMA); }
-		public TerminalNode PUNTOYCOMA() { return getToken(MusilengParser.PUNTOYCOMA, 0); }
 		public NotaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1076,23 +1055,23 @@ public class MusilengParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(160); match(NOTA);
-			setState(161); match(LPAREN);
-			setState(162); ((NotaContext)_localctx).ALTURA = match(ALTURA);
-			setState(163); match(COMA);
-			setState(164); ((NotaContext)_localctx).octava = octava();
+			setState(162); match(NOTA);
+			setState(163); match(LPAREN);
+			setState(164); ((NotaContext)_localctx).ALTURA = match(ALTURA);
 			setState(165); match(COMA);
-			setState(166); ((NotaContext)_localctx).DURACION = match(DURACION);
-			setState(168);
+			setState(166); ((NotaContext)_localctx).octava = octava();
+			setState(167); match(COMA);
+			setState(168); ((NotaContext)_localctx).DURACION = match(DURACION);
+			setState(170);
 			_la = _input.LA(1);
 			if (_la==PUNTILLO) {
 				{
-				setState(167); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
+				setState(169); ((NotaContext)_localctx).PUNTILLO = match(PUNTILLO);
 				}
 			}
 
-			setState(170); match(RPAREN);
-			setState(171); match(PUNTOYCOMA);
+			setState(172); match(RPAREN);
+			setState(173); match(PUNTOYCOMA);
 			((NotaContext)_localctx).notaObj =  new Nota((((NotaContext)_localctx).ALTURA!=null?((NotaContext)_localctx).ALTURA.getText():null),((NotaContext)_localctx).octava.valor,(((NotaContext)_localctx).DURACION!=null?((NotaContext)_localctx).DURACION.getText():null), ((NotaContext)_localctx).PUNTILLO != null);
 			}
 		}
@@ -1111,8 +1090,8 @@ public class MusilengParser extends Parser {
 		public int valor;
 		public Token NUM;
 		public Token NOMBRE;
-		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
 		public TerminalNode NOMBRE() { return getToken(MusilengParser.NOMBRE, 0); }
+		public TerminalNode NUM() { return getToken(MusilengParser.NUM, 0); }
 		public OctavaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1131,23 +1110,23 @@ public class MusilengParser extends Parser {
 		OctavaContext _localctx = new OctavaContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_octava);
 		try {
-			setState(180);
+			setState(182);
 			switch (_input.LA(1)) {
 			case NUM:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(174); ((OctavaContext)_localctx).NUM = match(NUM);
-				setState(175);
-				if (!((((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) <=9 && (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) >0)) throw new FailedPredicateException(this, "La octava tiene que ser menor o igual que 9");
+				setState(176); ((OctavaContext)_localctx).NUM = match(NUM);
+				setState(177);
+				if (!((((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) <=9 && (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) >0)) throw new FailedPredicateException(this, "La octava no esta en rango, tiene que ser entre 1 y 9.");
 				((OctavaContext)_localctx).valor =  (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0);
 				}
 				break;
 			case NOMBRE:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(177); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
-				setState(178);
-				if (!(constantes.containsKey((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) <= 9  && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) > 0)) throw new FailedPredicateException(this, "constantes.containsKey($NOMBRE.text) && constantes.get($NOMBRE.text) <= 9  && constantes.get($NOMBRE.text) > 0");
+				setState(179); ((OctavaContext)_localctx).NOMBRE = match(NOMBRE);
+				setState(180);
+				if (!(constantes.containsKey((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) <= 9  && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) > 0)) throw new FailedPredicateException(this, "La octava debe estar definida y estar en el rango del 1 al 9.");
 				((OctavaContext)_localctx).valor =  constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null));
 				}
 				break;
@@ -1178,31 +1157,10 @@ public class MusilengParser extends Parser {
 		}
 		return true;
 	}
-	private boolean constante_sempred(ConstanteContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 2: return agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0));
-		case 3: return agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null));
-		}
-		return true;
-	}
-	private boolean melodia_sempred(MelodiaContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 4: return constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null));
-		case 5: return validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases);
-		case 6: return _localctx.voces.size() <= 16;
-		}
-		return true;
-	}
 	private boolean repeticion_sempred(RepeticionContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 7: return (((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0;
-		case 8: return constantes.containsKey((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null))  && constantes.get((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null)) > 0;
-		}
-		return true;
-	}
-	private boolean tempos_sempred(TemposContext _localctx, int predIndex) {
-		switch (predIndex) {
-		case 0: return (((TemposContext)_localctx).NUM!=null?Integer.valueOf(((TemposContext)_localctx).NUM.getText()):0) > 0;
+		case 9: return (((RepeticionContext)_localctx).NUM!=null?Integer.valueOf(((RepeticionContext)_localctx).NUM.getText()):0) > 0;
+		case 10: return constantes.containsKey((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null))  && constantes.get((((RepeticionContext)_localctx).NOMBRE!=null?((RepeticionContext)_localctx).NOMBRE.getText():null)) > 0;
 		}
 		return true;
 	}
@@ -1212,73 +1170,97 @@ public class MusilengParser extends Parser {
 		}
 		return true;
 	}
+	private boolean constante_sempred(ConstanteContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 2: return agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).NUM!=null?Integer.valueOf(((ConstanteContext)_localctx).NUM.getText()):0));
+		case 3: return agregarConstante((((ConstanteContext)_localctx).n1!=null?((ConstanteContext)_localctx).n1.getText():null), (((ConstanteContext)_localctx).n2!=null?((ConstanteContext)_localctx).n2.getText():null));
+		}
+		return true;
+	}
+	private boolean melodia_sempred(MelodiaContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 4: return (((MelodiaContext)_localctx).NUM!=null?Integer.valueOf(((MelodiaContext)_localctx).NUM.getText()):0) < 127 && (((MelodiaContext)_localctx).NUM!=null?Integer.valueOf(((MelodiaContext)_localctx).NUM.getText()):0) >= 0;
+		case 5: return constantes.containsKey((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null));
+		case 6: return constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)) <= 127 && constantes.get((((MelodiaContext)_localctx).NOMBRE!=null?((MelodiaContext)_localctx).NOMBRE.getText():null)) >= 0;
+		case 7: return validarAlMenosUnCompas(((MelodiaContext)_localctx).compases.listaCompases);
+		case 8: return _localctx.voces.size() <= 16;
+		}
+		return true;
+	}
+	private boolean tempos_sempred(TemposContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0: return (((TemposContext)_localctx).NUM!=null?Integer.valueOf(((TemposContext)_localctx).NUM.getText()):0) > 0;
+		}
+		return true;
+	}
 	private boolean compas_sempred(CompasContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 9: return validarDuracion(_localctx.compasObj.notas, _localctx.indicacion);
+		case 11: return validarDuracion(_localctx.compasObj.notas, _localctx.indicacion);
 		}
 		return true;
 	}
 	private boolean octava_sempred(OctavaContext _localctx, int predIndex) {
 		switch (predIndex) {
-		case 10: return (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) <=9 && (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) >0;
-		case 11: return constantes.containsKey((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) <= 9  && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) > 0;
+		case 12: return (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) <=9 && (((OctavaContext)_localctx).NUM!=null?Integer.valueOf(((OctavaContext)_localctx).NUM.getText()):0) >0;
+		case 13: return constantes.containsKey((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) <= 9  && constantes.get((((OctavaContext)_localctx).NOMBRE!=null?((OctavaContext)_localctx).NOMBRE.getText():null)) > 0;
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\31\u00b9\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\31\u00bb\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3"+
 		"\3\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\5\7\5\61\n\5\f\5\16\5\64\13\5\3"+
 		"\6\3\6\3\6\3\6\3\6\3\6\3\6\5\6=\n\6\3\6\3\6\3\7\3\7\3\7\3\7\3\7\3\7\3"+
-		"\7\3\7\5\7I\n\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\6\7S\n\7\r\7\16\7T\3\b"+
-		"\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\bc\n\b\3\t\3\t\3\t\3\t"+
-		"\3\t\3\t\3\t\3\t\3\t\3\t\6\to\n\t\r\t\16\tp\3\t\3\t\3\t\3\t\3\t\3\t\3"+
-		"\t\3\t\3\t\3\t\3\t\3\t\3\t\6\t\u0080\n\t\r\t\16\t\u0081\3\t\3\t\3\t\5"+
-		"\t\u0087\n\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\6\n\u0092\n\n\r\n\16"+
-		"\n\u0093\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5\13\u009d\n\13\3\13\3\13\3\13"+
-		"\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u00ab\n\f\3\f\3\f\3\f\3\f\3"+
-		"\r\3\r\3\r\3\r\3\r\3\r\5\r\u00b7\n\r\3\r\2\2\16\2\4\6\b\n\f\16\20\22\24"+
-		"\26\30\2\2\u00ba\2\32\3\2\2\2\4 \3\2\2\2\6\'\3\2\2\2\b\62\3\2\2\2\n\65"+
-		"\3\2\2\2\f@\3\2\2\2\16b\3\2\2\2\20\u0086\3\2\2\2\22\u0088\3\2\2\2\24\u0098"+
-		"\3\2\2\2\26\u00a2\3\2\2\2\30\u00b6\3\2\2\2\32\33\5\4\3\2\33\34\5\6\4\2"+
-		"\34\35\5\b\5\2\35\36\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7\f\2\2!\"\7"+
-		"\3\2\2\"#\7\24\2\2#$\7\26\2\2$%\b\3\1\2%&\6\3\2\3&\5\3\2\2\2\'(\7\f\2"+
-		"\2()\7\4\2\2)*\7\26\2\2*+\7\17\2\2+,\7\26\2\2,-\6\4\3\3-.\b\4\1\2.\7\3"+
-		"\2\2\2/\61\5\n\6\2\60/\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2"+
-		"\2\63\t\3\2\2\2\64\62\3\2\2\2\65\66\7\5\2\2\66\67\7\27\2\2\67<\7\6\2\2"+
-		"89\7\26\2\29=\6\6\4\3:;\7\27\2\2;=\6\6\5\3<8\3\2\2\2<:\3\2\2\2=>\3\2\2"+
-		"\2>?\7\16\2\2?\13\3\2\2\2@R\b\7\1\2AB\7\7\2\2BH\7\b\2\2CD\7\26\2\2DI\b"+
-		"\7\1\2EF\7\27\2\2FG\6\7\6\3GI\b\7\1\2HC\3\2\2\2HE\3\2\2\2IJ\3\2\2\2JK"+
-		"\7\t\2\2KL\7\n\2\2LM\5\16\b\2MN\7\13\2\2NO\6\7\7\3OP\b\7\1\2PQ\6\7\b\3"+
-		"QS\3\2\2\2RA\3\2\2\2ST\3\2\2\2TR\3\2\2\2TU\3\2\2\2U\r\3\2\2\2VW\b\b\1"+
-		"\2WX\5\22\n\2XY\b\b\1\2YZ\5\16\b\2Z[\b\b\1\2[c\3\2\2\2\\]\b\b\1\2]^\5"+
-		"\20\t\2^_\b\b\1\2_`\5\16\b\2`c\3\2\2\2ac\b\b\1\2bV\3\2\2\2b\\\3\2\2\2"+
-		"ba\3\2\2\2c\17\3\2\2\2de\b\t\1\2ef\7\20\2\2fg\7\b\2\2gh\7\26\2\2hi\6\t"+
-		"\t\3ij\7\t\2\2jn\7\n\2\2kl\5\22\n\2lm\b\t\1\2mo\3\2\2\2nk\3\2\2\2op\3"+
-		"\2\2\2pn\3\2\2\2pq\3\2\2\2qr\3\2\2\2rs\b\t\1\2st\7\13\2\2t\u0087\3\2\2"+
-		"\2uv\b\t\1\2vw\7\20\2\2wx\7\b\2\2xy\7\27\2\2yz\6\t\n\3z{\7\t\2\2{\177"+
-		"\7\n\2\2|}\5\22\n\2}~\b\t\1\2~\u0080\3\2\2\2\177|\3\2\2\2\u0080\u0081"+
-		"\3\2\2\2\u0081\177\3\2\2\2\u0081\u0082\3\2\2\2\u0082\u0083\3\2\2\2\u0083"+
-		"\u0084\b\t\1\2\u0084\u0085\7\13\2\2\u0085\u0087\3\2\2\2\u0086d\3\2\2\2"+
-		"\u0086u\3\2\2\2\u0087\21\3\2\2\2\u0088\u0089\b\n\1\2\u0089\u008a\7\4\2"+
-		"\2\u008a\u0091\7\n\2\2\u008b\u008c\5\26\f\2\u008c\u008d\b\n\1\2\u008d"+
-		"\u0092\3\2\2\2\u008e\u008f\5\24\13\2\u008f\u0090\b\n\1\2\u0090\u0092\3"+
-		"\2\2\2\u0091\u008b\3\2\2\2\u0091\u008e\3\2\2\2\u0092\u0093\3\2\2\2\u0093"+
-		"\u0091\3\2\2\2\u0093\u0094\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0096\7\13"+
-		"\2\2\u0096\u0097\6\n\13\3\u0097\23\3\2\2\2\u0098\u0099\7\21\2\2\u0099"+
-		"\u009a\7\b\2\2\u009a\u009c\7\24\2\2\u009b\u009d\7\23\2\2\u009c\u009b\3"+
-		"\2\2\2\u009c\u009d\3\2\2\2\u009d\u009e\3\2\2\2\u009e\u009f\7\t\2\2\u009f"+
-		"\u00a0\7\16\2\2\u00a0\u00a1\b\13\1\2\u00a1\25\3\2\2\2\u00a2\u00a3\7\22"+
-		"\2\2\u00a3\u00a4\7\b\2\2\u00a4\u00a5\7\25\2\2\u00a5\u00a6\7\r\2\2\u00a6"+
-		"\u00a7\5\30\r\2\u00a7\u00a8\7\r\2\2\u00a8\u00aa\7\24\2\2\u00a9\u00ab\7"+
-		"\23\2\2\u00aa\u00a9\3\2\2\2\u00aa\u00ab\3\2\2\2\u00ab\u00ac\3\2\2\2\u00ac"+
-		"\u00ad\7\t\2\2\u00ad\u00ae\7\16\2\2\u00ae\u00af\b\f\1\2\u00af\27\3\2\2"+
-		"\2\u00b0\u00b1\7\26\2\2\u00b1\u00b2\6\r\f\3\u00b2\u00b7\b\r\1\2\u00b3"+
-		"\u00b4\7\27\2\2\u00b4\u00b5\6\r\r\3\u00b5\u00b7\b\r\1\2\u00b6\u00b0\3"+
-		"\2\2\2\u00b6\u00b3\3\2\2\2\u00b7\31\3\2\2\2\17\62<HTbp\u0081\u0086\u0091"+
-		"\u0093\u009c\u00aa\u00b6";
+		"\7\3\7\3\7\3\7\5\7K\n\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\3\7\6\7U\n\7\r\7\16"+
+		"\7V\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\3\b\5\be\n\b\3\t\3\t\3"+
+		"\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\6\tq\n\t\r\t\16\tr\3\t\3\t\3\t\3\t\3\t"+
+		"\3\t\3\t\3\t\3\t\3\t\3\t\3\t\3\t\6\t\u0082\n\t\r\t\16\t\u0083\3\t\3\t"+
+		"\3\t\5\t\u0089\n\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\3\n\6\n\u0094\n\n\r"+
+		"\n\16\n\u0095\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5\13\u009f\n\13\3\13\3\13"+
+		"\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u00ad\n\f\3\f\3\f\3\f\3"+
+		"\f\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00b9\n\r\3\r\2\2\16\2\4\6\b\n\f\16\20"+
+		"\22\24\26\30\2\2\u00bc\2\32\3\2\2\2\4 \3\2\2\2\6\'\3\2\2\2\b\62\3\2\2"+
+		"\2\n\65\3\2\2\2\f@\3\2\2\2\16d\3\2\2\2\20\u0088\3\2\2\2\22\u008a\3\2\2"+
+		"\2\24\u009a\3\2\2\2\26\u00a4\3\2\2\2\30\u00b8\3\2\2\2\32\33\5\4\3\2\33"+
+		"\34\5\6\4\2\34\35\5\b\5\2\35\36\5\f\7\2\36\37\b\2\1\2\37\3\3\2\2\2 !\7"+
+		"\f\2\2!\"\7\3\2\2\"#\7\25\2\2#$\7\27\2\2$%\b\3\1\2%&\6\3\2\3&\5\3\2\2"+
+		"\2\'(\7\f\2\2()\7\4\2\2)*\7\27\2\2*+\7\17\2\2+,\7\27\2\2,-\6\4\3\3-.\b"+
+		"\4\1\2.\7\3\2\2\2/\61\5\n\6\2\60/\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2"+
+		"\62\63\3\2\2\2\63\t\3\2\2\2\64\62\3\2\2\2\65\66\7\5\2\2\66\67\7\30\2\2"+
+		"\67<\7\6\2\289\7\27\2\29=\6\6\4\3:;\7\30\2\2;=\6\6\5\3<8\3\2\2\2<:\3\2"+
+		"\2\2=>\3\2\2\2>?\7\16\2\2?\13\3\2\2\2@T\b\7\1\2AB\7\7\2\2BJ\7\b\2\2CD"+
+		"\7\27\2\2DE\b\7\1\2EK\6\7\6\3FG\7\30\2\2GH\6\7\7\3HI\6\7\b\3IK\b\7\1\2"+
+		"JC\3\2\2\2JF\3\2\2\2KL\3\2\2\2LM\7\t\2\2MN\7\n\2\2NO\5\16\b\2OP\7\13\2"+
+		"\2PQ\6\7\t\3QR\b\7\1\2RS\6\7\n\3SU\3\2\2\2TA\3\2\2\2UV\3\2\2\2VT\3\2\2"+
+		"\2VW\3\2\2\2W\r\3\2\2\2XY\b\b\1\2YZ\5\22\n\2Z[\b\b\1\2[\\\5\16\b\2\\]"+
+		"\b\b\1\2]e\3\2\2\2^_\b\b\1\2_`\5\20\t\2`a\b\b\1\2ab\5\16\b\2be\3\2\2\2"+
+		"ce\b\b\1\2dX\3\2\2\2d^\3\2\2\2dc\3\2\2\2e\17\3\2\2\2fg\b\t\1\2gh\7\21"+
+		"\2\2hi\7\b\2\2ij\7\27\2\2jk\6\t\13\3kl\7\t\2\2lp\7\n\2\2mn\5\22\n\2no"+
+		"\b\t\1\2oq\3\2\2\2pm\3\2\2\2qr\3\2\2\2rp\3\2\2\2rs\3\2\2\2st\3\2\2\2t"+
+		"u\b\t\1\2uv\7\13\2\2v\u0089\3\2\2\2wx\b\t\1\2xy\7\21\2\2yz\7\b\2\2z{\7"+
+		"\30\2\2{|\6\t\f\3|}\7\t\2\2}\u0081\7\n\2\2~\177\5\22\n\2\177\u0080\b\t"+
+		"\1\2\u0080\u0082\3\2\2\2\u0081~\3\2\2\2\u0082\u0083\3\2\2\2\u0083\u0081"+
+		"\3\2\2\2\u0083\u0084\3\2\2\2\u0084\u0085\3\2\2\2\u0085\u0086\b\t\1\2\u0086"+
+		"\u0087\7\13\2\2\u0087\u0089\3\2\2\2\u0088f\3\2\2\2\u0088w\3\2\2\2\u0089"+
+		"\21\3\2\2\2\u008a\u008b\b\n\1\2\u008b\u008c\7\4\2\2\u008c\u0093\7\n\2"+
+		"\2\u008d\u008e\5\26\f\2\u008e\u008f\b\n\1\2\u008f\u0094\3\2\2\2\u0090"+
+		"\u0091\5\24\13\2\u0091\u0092\b\n\1\2\u0092\u0094\3\2\2\2\u0093\u008d\3"+
+		"\2\2\2\u0093\u0090\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0093\3\2\2\2\u0095"+
+		"\u0096\3\2\2\2\u0096\u0097\3\2\2\2\u0097\u0098\7\13\2\2\u0098\u0099\6"+
+		"\n\r\3\u0099\23\3\2\2\2\u009a\u009b\7\22\2\2\u009b\u009c\7\b\2\2\u009c"+
+		"\u009e\7\25\2\2\u009d\u009f\7\24\2\2\u009e\u009d\3\2\2\2\u009e\u009f\3"+
+		"\2\2\2\u009f\u00a0\3\2\2\2\u00a0\u00a1\7\t\2\2\u00a1\u00a2\7\16\2\2\u00a2"+
+		"\u00a3\b\13\1\2\u00a3\25\3\2\2\2\u00a4\u00a5\7\23\2\2\u00a5\u00a6\7\b"+
+		"\2\2\u00a6\u00a7\7\26\2\2\u00a7\u00a8\7\r\2\2\u00a8\u00a9\5\30\r\2\u00a9"+
+		"\u00aa\7\r\2\2\u00aa\u00ac\7\25\2\2\u00ab\u00ad\7\24\2\2\u00ac\u00ab\3"+
+		"\2\2\2\u00ac\u00ad\3\2\2\2\u00ad\u00ae\3\2\2\2\u00ae\u00af\7\t\2\2\u00af"+
+		"\u00b0\7\16\2\2\u00b0\u00b1\b\f\1\2\u00b1\27\3\2\2\2\u00b2\u00b3\7\27"+
+		"\2\2\u00b3\u00b4\6\r\16\3\u00b4\u00b9\b\r\1\2\u00b5\u00b6\7\30\2\2\u00b6"+
+		"\u00b7\6\r\17\3\u00b7\u00b9\b\r\1\2\u00b8\u00b2\3\2\2\2\u00b8\u00b5\3"+
+		"\2\2\2\u00b9\31\3\2\2\2\17\62<JVdr\u0083\u0088\u0093\u0095\u009e\u00ac"+
+		"\u00b8";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

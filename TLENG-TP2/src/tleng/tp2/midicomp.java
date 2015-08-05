@@ -84,6 +84,7 @@ public class midicomp {
 				if(!nota.isSilencio()) {
 					writer.println(String.format("%03d:%02d:%03d On ch=%s note=%s vol=70",bar_num,beat_num, click_num, voice_number, nota.notacionAmericana()));
 					int click_figure = clicksPorFigura(nota.duracion, indicacion);
+					click_figure = click_figure + Double.valueOf(nota.tienePuntillo? click_figure /2 : 0.0).intValue();
 					int temp_click = click_num + click_figure;
 					click_num = temp_click % clicks_per_beat;
 					int temp_beat = beat_num + (temp_click / clicks_per_beat);
@@ -92,6 +93,7 @@ public class midicomp {
 					writer.println(String.format("%03d:%02d:%03d Off ch=%d note=%s vol=0",bar_num, beat_num,click_num, voice_number, nota.notacionAmericana()));
 				} else {
 					int click_figure = clicksPorFigura(nota.duracion, indicacion);
+					click_figure = click_figure + Double.valueOf(nota.tienePuntillo? click_figure /2 : 0.0).intValue();
 					int temp_click = click_num + click_figure;
 					click_num = temp_click % clicks_per_beat;
 					int temp_beat = beat_num + (temp_click / clicks_per_beat);

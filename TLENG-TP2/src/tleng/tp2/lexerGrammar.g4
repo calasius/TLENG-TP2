@@ -22,6 +22,8 @@ COMA: ',' ;
 PUNTOYCOMA: ';';
 SLASH: '/';
 
+COMENTARIOS:   '//' ~[\r\n]* -> skip ;
+
 
 REPETIR: 'repetir';
 SILENCIO: 'silencio';
@@ -41,7 +43,6 @@ NOMBRE: [_a-zA-Z][_a-zA-Z0-9]*;
 
 //OCTAVA: [1-9];
 
-COMENTARIOS:   '//(.*?)\r?\n' -> skip ;
 
 //para escaper espacios, tabs, y saltos de linea
 WS : [ \t\r\n]+ -> skip ;
