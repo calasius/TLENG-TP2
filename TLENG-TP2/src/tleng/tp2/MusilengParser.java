@@ -1,19 +1,27 @@
 // Generated from Musileng.g4 by ANTLR 4.4
 package tleng.tp2;
 
-	import java.util.HashMap;
-	import java.util.Map;
-	import java.util.List;
 	import java.util.ArrayList;
-
-import org.antlr.v4.runtime.atn.*;
-import org.antlr.v4.runtime.dfa.DFA;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.*;
-import org.antlr.v4.runtime.tree.*;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
+import java.util.Map;
+
+import org.antlr.v4.runtime.FailedPredicateException;
+import org.antlr.v4.runtime.NoViableAltException;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.RuntimeMetaData;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.atn.ATN;
+import org.antlr.v4.runtime.atn.ATNDeserializer;
+import org.antlr.v4.runtime.atn.ParserATNSimulator;
+import org.antlr.v4.runtime.atn.PredictionContextCache;
+import org.antlr.v4.runtime.dfa.DFA;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class MusilengParser extends Parser {
@@ -236,6 +244,13 @@ public class MusilengParser extends Parser {
 			}
 		}
 		
+		 public void displayRecognitionError(String[] tokenNames,
+                 RecognitionException e) {
+String hdr = getErrorHeader(e);
+//String msg = getErrorMessage(e, tokenNames);
+// Now do something with hdr and msg...
+}
+		
 		public static class Melodia {
 			public List<Voz> voces;
 			public Melodia(List<Voz> voces) {
@@ -358,6 +373,8 @@ public class MusilengParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
+				
+				
 			setState(30); match(NUMERAL);
 			setState(31); match(TEMPO);
 			setState(32); ((TemposContext)_localctx).DURACION = match(DURACION);
@@ -410,7 +427,8 @@ public class MusilengParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(37); match(NUMERAL);
-			setState(38); match(COMPAS);
+			setState(38); Token compas = match(COMPAS);
+			
 			setState(39); ((ElcompasContext)_localctx).n1 = match(NUM);
 			setState(40); match(SLASH);
 			setState(41); ((ElcompasContext)_localctx).n2 = match(NUM);

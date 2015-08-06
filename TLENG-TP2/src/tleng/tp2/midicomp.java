@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 import tleng.tp2.MusilengParser.Compas;
 import tleng.tp2.MusilengParser.IndicacionCompas;
@@ -34,8 +35,12 @@ public class midicomp {
 				String midiFile = args[2];
 				CharStream charStream = new ANTLRFileStream(inFile);
 				MusilengLexer lexer = new MusilengLexer(charStream);
+				lexer.removeErrorListeners();
+				lexer.addErrorListener(ThrowingErrorListener.INSTANCE);
 				TokenStream tokenStream = new CommonTokenStream(lexer);
 				MusilengParser parser = new MusilengParser(tokenStream);
+				parser.removeErrorListeners();
+				parser.addErrorListener(ThrowingErrorListener.INSTANCE);
 				parser.setErrorHandler(new ErrorStrategy());
 				try {
 					Partitura partitura = parser.s().partitura;					
